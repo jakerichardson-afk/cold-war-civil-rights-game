@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cold War &amp; Civil Rights Era: 1945–1975</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js" defer></script>
+<script>
+  window._fbReady = false;
+  window._fbDb = null;
+  function _initFirebase() {
+    if (typeof firebase === 'undefined') {
+      console.warn('Firebase scripts not available.');
+      return;
+    }
+    try {
+      var _fbApp = firebase.initializeApp({
+        apiKey: "AIzaSyDpUs3ifJDRJ3sl2bmQI-wHOlf7rgeRN-A",
+        authDomain: "america-and-world-game.firebaseapp.com",
+        databaseURL: "https://america-and-world-game-default-rtdb.firebaseio.com",
+        projectId: "america-and-world-game",
+        storageBucket: "america-and-world-game.firebasestorage.app",
+        messagingSenderId: "615044481272",
+        appId: "1:615044481274:web:0548a8d4f0773e9b548943"
+      });
+      window._fbDb = firebase.database(_fbApp);
+
+      window._fbGetAll = async function() {
+        var snap = await window._fbDb.ref('coldwar_civilrights_leaderboard_v1').get();
+        console.log('_fbGetAll exists:', snap.exists(), 'val:', JSON.stringify(snap.val()));
+        return snap.exists() ? snap.val() : null;
+      };
+
+      window._fbSetUser = async function(username, entry) {
+        var safeName = username.replace(/[.#$[\]\/]/g, '_');
+        var path = 'coldwar_civilrights_leaderboard_v1/' + safeName;
+        console.log('Writing to Firebase path:', path);
+        await window._fbDb.ref(path).set(entry);
+        console.log('Write complete for:', path);
+      };
+
+      window._fbReady = true;
+      console.log('Firebase connected successfully');
+    } catch(e) {
+      console.error('Firebase init error:', e.message);
+      window._fbReady = false;
+    }
+  }
+  window.addEventListener('load', _initFirebase);
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Oswald:wght@300;400;600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --panel: #12121a;
+    --panel2: #1a1a2e;
+    --gold: #f0b429;
+    --gold2: #e8930a;
+    --red: #c0392b;
+    --blue: #1e6ba8;
+    --blue2: #2980b9;
+    --green: #27ae60;
+    --silver: #bdc3c7;
+    --bronze: #cd7f32;
+    --platinum: #b2e0f5;
+    --text: #e8e0d0;
+    --muted: #888;
+    --border: #2a2a3e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Oswald', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Stars background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 60%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.15) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 70%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.18) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .screen { display: none; position: relative; z-index: 1; }
+  .screen.active { display: block; }
+  #titleScreen.active, #worldResultScreen.active, #usernameScreen.active { display: flex; }
+  #quizScreen.active { display: flex; }
+
+  /* ===== TITLE SCREEN ===== */
+  #titleScreen {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .title-eagle {
+    font-size: 5rem;
+    margin-bottom: 0.5rem;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .title-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    background: linear-gradient(135deg, #f0b429, #e8930a, #c0392b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+  }
+
+  .title-sub {
+    font-family: 'Special Elite', monospace;
+    font-size: 1.1rem;
+    color: var(--silver);
+    margin: 0.5rem 0 2.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .title-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .title-stats span { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+  .title-stats strong { color: var(--gold); font-size: 1.4rem; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: #0a0a0f;
+    border: none;
+    padding: 1rem 3rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,180,41,0.4); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--silver);
+    border: 1px solid var(--border);
+    padding: 0.6rem 1.5rem;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ===== WORLD SELECT ===== */
+  #worldScreen { padding: 2rem; min-height: 100vh; }
+
+  .ws-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .ws-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .ws-subtitle { color: var(--muted); font-size: 0.85rem; letter-spacing: 0.1em; }
+
+  .progress-bar-wrap {
+    max-width: 500px;
+    margin: 1rem auto;
+    background: var(--panel);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    transition: width 0.5s ease;
+    border-radius: 4px;
+  }
+  .progress-label { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; }
+
+  .worlds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .world-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .world-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--card-color, var(--blue));
+    transition: width 0.25s;
+  }
+  .world-card:hover { transform: translateY(-3px); border-color: var(--card-color, var(--blue)); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+  .world-card:hover::before { width: 6px; }
+
+  .world-card.completed { border-color: rgba(39,174,96,0.4); }
+  .world-card.completed::after {
+    content: '✓';
+    position: absolute;
+    top: 0.8rem; right: 0.8rem;
+    color: var(--green);
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .world-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .world-number { font-size: 0.7rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; }
+  .world-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; color: var(--text); line-height: 1.1; margin: 0.2rem 0; }
+  .world-era { font-size: 0.75rem; color: var(--muted); }
+
+  .world-score-bar {
+    margin-top: 0.8rem;
+    background: var(--bg);
+    height: 4px;
+    border-radius: 2px;
+  }
+  .world-score-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--card-color, var(--blue));
+    transition: width 0.5s;
+  }
+  .world-score-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+
+  .ws-footer {
+    text-align: center;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* ===== QUIZ SCREEN ===== */
+  #quizScreen { min-height: 100vh; flex-direction: column; }
+
+  .quiz-header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .quiz-back {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    font-family: 'Oswald';
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+  }
+  .quiz-back:hover { color: var(--gold); border-color: var(--gold); }
+
+  .quiz-world-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+
+  .quiz-progress {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .quiz-dots { display: flex; gap: 4px; }
+  .quiz-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .quiz-dot.answered-correct { background: var(--green); }
+  .quiz-dot.answered-wrong { background: var(--red); }
+  .quiz-dot.current { background: var(--gold); }
+
+  .quiz-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .q-type-badge {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid;
+    margin-bottom: 1.2rem;
+    align-self: flex-start;
+  }
+  .q-type-badge.mc { color: var(--blue2); border-color: var(--blue2); }
+  .q-type-badge.tf { color: var(--gold); border-color: var(--gold); }
+  .q-type-badge.fb { color: #9b59b6; border-color: #9b59b6; }
+  .q-type-badge.stimulus { color: #e67e22; border-color: #e67e22; }
+
+  .q-number {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.6rem;
+    align-self: flex-start;
+  }
+
+  .q-text {
+    font-family: 'Special Elite', monospace;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: var(--text);
+    align-self: flex-start;
+    width: 100%;
+  }
+
+  .q-context {
+    background: var(--panel);
+    border-left: 3px solid var(--gold);
+    padding: 0.8rem 1rem;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.85rem;
+    color: var(--silver);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    align-self: flex-start;
+    width: 100%;
+    font-style: italic;
+  }
+
+  /* Stimulus blocks */
+  .stimulus-block {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .stimulus-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.8rem;
+    background: rgba(230,126,34,0.15);
+    border-bottom: 1px solid var(--border);
+    color: #e67e22;
+  }
+  .stimulus-quote {
+    padding: 1.2rem 1.5rem;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--silver);
+    font-style: italic;
+    border-left: 4px solid #e67e22;
+  }
+  .stimulus-attribution {
+    padding: 0.4rem 1.5rem 0.8rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  .stimulus-img-link-block {
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+  }
+  .stimulus-img-icon {
+    font-size: 2.5rem;
+  }
+  .stimulus-img-desc {
+    font-size: 0.8rem;
+    color: var(--silver);
+    line-height: 1.5;
+    max-width: 500px;
+    font-style: italic;
+  }
+  .stimulus-image {
+    width: 100%;
+    max-height: 340px;
+    object-fit: contain;
+    background: #000;
+    display: block;
+  }
+  .stimulus-image-caption {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.4;
+    font-style: italic;
+  }
+
+  /* MC options */
+  .mc-options { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
+  .mc-option {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    color: var(--text);
+    text-align: left;
+  }
+  .mc-option:hover:not(.locked) { border-color: var(--gold); background: var(--panel2); }
+  .mc-option.selected-correct { border-color: var(--green); background: rgba(39,174,96,0.15); color: #2ecc71; }
+  .mc-option.selected-wrong { border-color: var(--red); background: rgba(192,57,43,0.15); color: #e74c3c; }
+  .mc-option.show-correct { border-color: var(--green); background: rgba(39,174,96,0.08); color: var(--green); }
+  .mc-option.locked { cursor: default; }
+
+  .mc-letter {
+    width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .mc-option:hover:not(.locked) .mc-letter { border-color: var(--gold); color: var(--gold); }
+  .mc-option.selected-correct .mc-letter { border-color: var(--green); color: var(--green); }
+  .mc-option.selected-wrong .mc-letter { border-color: var(--red); color: var(--red); }
+  .mc-option.show-correct .mc-letter { border-color: var(--green); color: var(--green); }
+
+  /* TF options */
+  .tf-options { display: flex; gap: 1rem; width: 100%; justify-content: center; }
+  .tf-btn {
+    flex: 1; max-width: 200px;
+    padding: 1.5rem;
+    border: 2px solid var(--border);
+    background: var(--panel);
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .tf-btn:hover:not(.locked) { transform: translateY(-3px); }
+  .tf-btn.true-btn:hover:not(.locked) { border-color: var(--green); color: var(--green); }
+  .tf-btn.false-btn:hover:not(.locked) { border-color: var(--red); color: var(--red); }
+  .tf-btn.selected-correct { border-color: var(--green); background: rgba(39,174,96,0.15); color: var(--green); }
+  .tf-btn.selected-wrong { border-color: var(--red); background: rgba(192,57,43,0.15); color: var(--red); }
+  .tf-btn.show-correct { border-color: var(--green); background: rgba(39,174,96,0.08); color: var(--green); }
+  .tf-btn.locked { cursor: default; }
+
+  /* Fill in the blank */
+  .fb-wrap { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .fb-input {
+    width: 100%;
+    max-width: 500px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 1rem 1.2rem;
+    font-family: 'Special Elite', monospace;
+    font-size: 1.1rem;
+    text-align: center;
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s;
+  }
+  .fb-input:focus { outline: none; border-color: var(--gold); }
+  .fb-input.correct { border-color: var(--green); color: var(--green); }
+  .fb-input.wrong { border-color: var(--red); color: var(--red); }
+  .fb-hint { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.08em; }
+  .fb-submit {
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    padding: 0.75rem 2rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .fb-submit:hover { background: var(--gold2); }
+  .fb-submit:disabled { opacity: 0.4; cursor: default; }
+
+  /* Feedback */
+  .feedback-box {
+    margin-top: 1.5rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid;
+    width: 100%;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct { border-color: var(--green); background: rgba(39,174,96,0.1); }
+  .feedback-box.wrong { border-color: var(--red); background: rgba(192,57,43,0.1); }
+  .feedback-icon { font-size: 1.2rem; }
+  .feedback-title { font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 0.1em; }
+  .feedback-box.correct .feedback-title { color: var(--green); }
+  .feedback-box.wrong .feedback-title { color: var(--red); }
+  .feedback-explanation { font-size: 0.85rem; color: var(--silver); margin-top: 0.3rem; line-height: 1.5; }
+
+  .next-btn {
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--bg);
+    border: none;
+    padding: 0.85rem 2.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: all 0.2s;
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(240,180,41,0.35); }
+
+  /* ===== WORLD RESULTS ===== */
+  #worldResultScreen { min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; }
+
+  .wr-icon { font-size: 4rem; margin-bottom: 1rem; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes pop {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+  .wr-title { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.1em; }
+  .wr-world { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+  .wr-score { font-size: 4rem; font-family: 'Bebas Neue'; color: var(--gold); }
+  .wr-score-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.12em; margin-bottom: 1.5rem; }
+
+  .wr-breakdown {
+    display: flex; gap: 2rem; justify-content: center; margin: 1rem 0 2rem;
+    flex-wrap: wrap;
+  }
+  .wr-stat { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+  .wr-stat-num { font-family: 'Bebas Neue'; font-size: 1.8rem; }
+  .wr-stat-num.correct { color: var(--green); }
+  .wr-stat-num.wrong { color: var(--red); }
+  .wr-stat-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
+
+  .wr-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+  /* ===== FINAL RESULTS ===== */
+  #finalScreen { min-height: 100vh; padding: 2rem; overflow-y: auto; }
+  #finalScreen.active { display: block; }
+
+  .final-header { text-align: center; margin-bottom: 2rem; padding-top: 2rem; }
+  .final-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 7vw, 4.5rem); letter-spacing: 0.08em; background: linear-gradient(135deg, var(--gold), var(--gold2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .final-subtitle { font-family: 'Special Elite'; color: var(--muted); font-size: 0.9rem; letter-spacing: 0.12em; }
+
+  .medal-display {
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 400px;
+  }
+  .medal-icon { font-size: 6rem; animation: float 3s ease-in-out infinite; }
+  .medal-name {
+    font-family: 'Bebas Neue';
+    font-size: 2.5rem;
+    letter-spacing: 0.12em;
+    margin-top: 0.5rem;
+  }
+  .medal-name.platinum { color: var(--platinum); text-shadow: 0 0 20px rgba(178,224,245,0.5); }
+  .medal-name.gold { color: var(--gold); text-shadow: 0 0 20px rgba(240,180,41,0.4); }
+  .medal-name.silver { color: var(--silver); text-shadow: 0 0 20px rgba(189,195,199,0.3); }
+  .medal-name.bronze { color: var(--bronze); }
+
+  .trophy-case {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+  }
+  .trophy-item {
+    font-size: 1.8rem;
+    opacity: 0.2;
+    transition: opacity 0.5s, transform 0.5s;
+    cursor: default;
+  }
+  .trophy-item.earned { opacity: 1; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+  .final-total {
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+  .final-pct { font-family: 'Bebas Neue'; font-size: 5rem; color: var(--gold); line-height: 1; }
+  .final-fraction { font-size: 1rem; color: var(--muted); letter-spacing: 0.1em; }
+  .grade-badge {
+    display: inline-block;
+    font-family: 'Bebas Neue';
+    font-size: 3rem;
+    padding: 0.3rem 1.5rem;
+    border: 3px solid;
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+  }
+  .grade-badge.A { border-color: var(--gold); color: var(--gold); }
+  .grade-badge.B { border-color: var(--blue2); color: var(--blue2); }
+  .grade-badge.C { border-color: var(--silver); color: var(--silver); }
+  .grade-badge.D { border-color: var(--bronze); color: var(--bronze); }
+  .grade-badge.F { border-color: var(--red); color: var(--red); }
+
+  .grade-msg { font-family: 'Special Elite'; font-size: 0.95rem; color: var(--silver); margin-top: 0.8rem; line-height: 1.5; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+  .world-breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+  }
+  .wb-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 0.8rem 1rem;
+  }
+  .wb-world-name { font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 0.06em; color: var(--text); line-height: 1.1; margin-bottom: 0.4rem; }
+  .wb-score-bar { height: 4px; background: var(--bg); margin: 0.4rem 0; }
+  .wb-score-fill { height: 100%; transition: width 1s ease; }
+  .wb-score-text { font-size: 0.8rem; color: var(--muted); }
+
+  .final-footer { text-align: center; margin-top: 2rem; padding-bottom: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    top: -10px;
+    animation: confettiFall linear forwards;
+    z-index: 999;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* ===== USERNAME ENTRY ===== */
+  #usernameScreen {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+  .un-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.4rem; }
+  .un-sub { font-family: 'Special Elite'; font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; }
+  .un-input {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    color: var(--text);
+    padding: 1rem 1.5rem;
+    font-family: 'Special Elite', monospace;
+    font-size: 1.3rem;
+    text-align: center;
+    letter-spacing: 0.08em;
+    width: 100%;
+    max-width: 340px;
+    transition: border-color 0.2s;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+  .un-input:focus { outline: none; border-color: var(--gold); }
+  .un-note { font-size: 0.75rem; color: var(--muted); margin-bottom: 1.5rem; max-width: 340px; }
+  .un-existing { margin-top: 1.5rem; font-size: 0.8rem; color: var(--muted); }
+  .un-existing span { color: var(--gold); font-weight: bold; cursor: pointer; text-decoration: underline; }
+
+  /* ===== LEADERBOARD ===== */
+  #leaderboardScreen { min-height: 100vh; padding: 2rem; overflow-y: auto; }
+  .lb-header { text-align: center; margin-bottom: 2rem; padding-top: 1rem; }
+  .lb-title { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.1em; color: var(--gold); }
+  .lb-subtitle { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.12em; }
+  .lb-loading { text-align: center; color: var(--muted); padding: 3rem; font-family: 'Special Elite'; }
+  .lb-table { max-width: 700px; margin: 0 auto; }
+  .lb-row {
+    display: grid;
+    grid-template-columns: 48px 1fr 80px 80px 80px;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .lb-row:hover { background: var(--panel); }
+  .lb-row.header { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--gold); padding-bottom: 0.5rem; }
+  .lb-row.me { background: rgba(240,180,41,0.08); border-left: 3px solid var(--gold); }
+  .lb-row.top1 .lb-rank { color: var(--gold); font-size: 1.4rem; }
+  .lb-row.top2 .lb-rank { color: var(--silver); font-size: 1.2rem; }
+  .lb-row.top3 .lb-rank { color: var(--bronze); font-size: 1.1rem; }
+  .lb-rank { font-family: 'Bebas Neue'; font-size: 1.1rem; text-align: center; color: var(--muted); }
+  .lb-name { font-family: 'Special Elite'; font-size: 0.95rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb-pct { font-family: 'Bebas Neue'; font-size: 1.2rem; color: var(--gold); text-align: right; }
+  .lb-worlds { font-size: 0.8rem; color: var(--muted); text-align: right; }
+  .lb-medal { font-size: 1.1rem; text-align: center; }
+  .lb-empty { text-align: center; color: var(--muted); padding: 2rem; font-family: 'Special Elite'; font-size: 0.9rem; }
+  .lb-footer { text-align: center; margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; padding-bottom: 2rem; }
+  .lb-updated { text-align: center; font-size: 0.7rem; color: var(--muted); margin-top: 1rem; letter-spacing: 0.08em; }
+
+  /* world select username display */
+  .ws-username { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 0.3rem; }
+  .ws-username span { color: var(--gold); }
+
+  /* ===== BATTLE ARENA ===== */
+  .battle-arena {
+    width: 100%;
+    background: var(--panel);
+    border-bottom: 2px solid var(--border);
+    padding: 0.75rem 1rem 0.5rem;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+  .battle-arena-bg {
+    position: absolute; inset: 0;
+    opacity: 0.07;
+    font-size: 4rem;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .battle-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+  .battle-combatant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 90px;
+  }
+  .battle-combatant.hero { align-items: flex-start; }
+  .battle-combatant.boss { align-items: flex-end; }
+  .battle-canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  .battle-name {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Oswald';
+  }
+  .battle-hp-wrap {
+    width: 100%;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    min-width: 80px;
+  }
+  .battle-hp-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .hero .battle-hp-bar { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+  .boss .battle-hp-bar { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+  .battle-hp-label {
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .battle-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding-bottom: 0.5rem;
+  }
+  .battle-vs {
+    font-family: 'Bebas Neue';
+    font-size: 1.4rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    line-height: 1;
+  }
+  .battle-streak {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  /* Hit flash animations */
+  @keyframes bossHit {
+    0%   { transform: translateX(0) scale(1); filter: brightness(1); }
+    20%  { transform: translateX(-12px) scale(0.95); filter: brightness(3) saturate(0); }
+    40%  { transform: translateX(6px) scale(1.02); filter: brightness(1.5); }
+    60%  { transform: translateX(-4px); }
+    100% { transform: translateX(0) scale(1); filter: brightness(1); }
+  }
+  @keyframes heroBlock {
+    0%   { transform: translateX(0); }
+    30%  { transform: translateX(5px) scale(0.97); filter: brightness(0.7); }
+    100% { transform: translateX(0); filter: brightness(1); }
+  }
+  @keyframes projectileFly {
+    0%   { transform: translateX(0) translateY(0); opacity: 1; }
+    80%  { transform: translateX(var(--fly-x)) translateY(var(--fly-y)); opacity: 1; }
+    100% { transform: translateX(var(--fly-x)) translateY(var(--fly-y)); opacity: 0; }
+  }
+  @keyframes bossDefeat {
+    0%   { transform: scale(1) rotate(0deg); opacity: 1; }
+    30%  { transform: scale(1.2) rotate(-10deg); filter: brightness(5); }
+    60%  { transform: scale(0.8) rotate(20deg); opacity: 0.5; }
+    100% { transform: scale(0) rotate(45deg); opacity: 0; }
+  }
+  @keyframes victoryPulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .boss-hit-anim { animation: bossHit 0.5s ease; }
+  .hero-block-anim { animation: heroBlock 0.4s ease; }
+  .boss-defeat-anim { animation: bossDefeat 0.8s ease forwards; }
+  .hero-victory-anim { animation: victoryPulse 0.6s ease 3; }
+  .projectile {
+    position: absolute;
+    font-size: 1.2rem;
+    pointer-events: none;
+    z-index: 10;
+    --fly-x: 120px;
+    --fly-y: -10px;
+    animation: projectileFly 0.45s ease-in forwards;
+  }
+  /* Boss defeated overlay */
+  .boss-defeated-badge {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--gold);
+    color: var(--bg);
+    font-family: 'Bebas Neue';
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    padding: 0.3rem 1rem;
+    white-space: nowrap;
+    animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 20;
+  }
+  /* World badge display */
+  .world-badge-earned {
+    display: inline-block;
+    font-size: 1.4rem;
+    animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: default;
+  }
+  .world-badge-locked {
+    font-size: 1.4rem;
+    opacity: 0.2;
+    cursor: default;
+  }
+  .world-card .badge-row {
+    margin-top: 0.4rem;
+    font-size: 1rem;
+  }
+
+
+/* ===== VIDEO LINKS ===== */
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.video-link:hover { background: rgba(255,255,255,0.28); }
+.video-link .yt-icon { color: #ff0000; font-size: 1rem; line-height: 1; }
+</style>
+</head>
+
+<body>
+
+<!-- ===== TITLE SCREEN ===== -->
+<div id="titleScreen" class="screen active">
+  <div class="title-eagle">🦅</div>
+  <div class="title-main">Cold War &amp; Civil Rights Era</div>
+  <div class="title-sub">1945 — 1975 · Study Quest</div>
+  <div class="title-stats">
+    <span><strong>5</strong> Worlds</span>
+    <span><strong>62</strong> Questions</span>
+    <span><strong>4</strong> Question Types</span>
+  </div>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+    <button class="btn-primary" onclick="showUsernameScreen()">Begin Campaign</button>
+    <button class="btn-secondary" onclick="showLeaderboard()">🏆 Leaderboard</button>
+  </div>
+</div>
+
+<!-- ===== WORLD SELECT ===== -->
+<div id="worldScreen" class="screen">
+  <div class="ws-header">
+    <div class="ws-title">Choose Your World</div>
+    <div class="ws-subtitle">Study any world in any order — return as many times as you like</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="globalProgressBar" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="globalProgressLabel">0 / 13 worlds completed</div>
+    <div class="ws-username">Playing as: <span id="wsUsername">—</span></div>
+  </div>
+  <div class="worlds-grid" id="worldsGrid"></div>
+  <div class="ws-footer">
+    <button class="btn-secondary" onclick="showTitle()">← Back to Title</button>
+    <button class="btn-secondary" onclick="showLeaderboard()">🏆 Leaderboard</button>
+    <button class="btn-primary" onclick="showFinalResults()">View Final Score 🏆</button>
+  </div>
+</div>
+
+<!-- ===== QUIZ SCREEN ===== -->
+<div id="quizScreen" class="screen">
+  <div class="quiz-header">
+    <button class="quiz-back" onclick="confirmBackToWorlds()">◀ Worlds</button>
+    <div class="quiz-world-name" id="quizWorldName"></div>
+    <div class="quiz-progress">
+      <span id="quizQNum"></span>
+      <div class="quiz-dots" id="quizDots"></div>
+    </div>
+  </div>
+  <!-- BATTLE ARENA -->
+  <div class="battle-arena" id="battleArena">
+    <div class="battle-arena-bg" id="battleBg"></div>
+    <div class="battle-row">
+      <!-- Hero -->
+      <div class="battle-combatant hero" id="heroCombatant">
+        <canvas class="battle-canvas" id="heroCanvas" width="64" height="64"></canvas>
+        <div class="battle-name" id="heroName">Hero</div>
+        <div class="battle-hp-wrap hero">
+          <div class="battle-hp-bar" id="heroHpBar" style="width:100%"></div>
+        </div>
+        <div class="battle-hp-label" id="heroHpLabel">HP: 100/100</div>
+      </div>
+      <!-- Center -->
+      <div class="battle-center">
+        <div class="battle-vs">⚔️ VS ⚔️</div>
+        <div class="battle-streak" id="battleStreak"></div>
+      </div>
+      <!-- Boss -->
+      <div class="battle-combatant boss" id="bossCombatant">
+        <canvas class="battle-canvas" id="bossCanvas" width="64" height="64"></canvas>
+        <div class="battle-name" id="bossName">Boss</div>
+        <div class="battle-hp-wrap boss">
+          <div class="battle-hp-bar" id="bossHpBar" style="width:100%"></div>
+        </div>
+        <div class="battle-hp-label" id="bossHpLabel">HP: 100/100</div>
+      </div>
+    </div>
+  </div>
+  <div class="quiz-body" id="quizBody"></div>
+</div>
+
+<!-- ===== WORLD RESULT ===== -->
+<div id="worldResultScreen" class="screen">
+  <div class="wr-icon" id="wrIcon"></div>
+  <div class="wr-title" id="wrTitle"></div>
+  <div class="wr-world" id="wrWorldName"></div>
+  <div class="wr-score" id="wrScore"></div>
+  <div class="wr-score-label">Score</div>
+  <div class="wr-breakdown">
+    <div class="wr-stat"><div class="wr-stat-num correct" id="wrCorrect"></div><div class="wr-stat-label">Correct</div></div>
+    <div class="wr-stat"><div class="wr-stat-num wrong" id="wrWrong"></div><div class="wr-stat-label">Wrong</div></div>
+  </div>
+  <div id="wrBadgeEarned" style="font-size:2rem;margin:0.5rem 0;min-height:2.5rem"></div>
+  <div class="wr-btns">
+    <button class="btn-secondary" onclick="retryWorld()">↺ Retry World</button>
+    <button class="btn-primary" onclick="showWorldSelect()">World Map</button>
+  </div>
+</div>
+
+<!-- ===== FINAL RESULTS ===== -->
+<div id="finalScreen" class="screen">
+  <div class="final-header">
+    <div class="final-title">Campaign Complete!</div>
+    <div class="final-subtitle">Cold War &amp; Civil Rights Era · 1898–1945</div>
+  </div>
+  <div class="medal-display">
+    <div class="medal-icon" id="medalIcon"></div>
+    <div class="medal-name" id="medalName"></div>
+  </div>
+  <div class="trophy-case" id="trophyCase"></div>
+  <div class="final-total">
+    <div class="final-pct" id="finalPct"></div>
+    <div class="final-fraction" id="finalFraction"></div>
+    <div class="grade-badge" id="gradeBadge"></div>
+    <div class="grade-msg" id="gradeMsg"></div>
+  </div>
+  <div class="world-breakdown-grid" id="worldBreakdownGrid"></div>
+  <div class="final-footer">
+    <button class="btn-secondary" onclick="showWorldSelect()">← Back to World Map</button>
+    <button class="btn-secondary" onclick="showLeaderboard()">🏆 Leaderboard</button>
+    <button class="btn-primary" onclick="resetAll()">Start Over 🔄</button>
+  </div>
+</div>
+
+
+<script>
+// ===========================
+// QUESTION DATA (62 questions)
+// ===========================
+const WORLDS = [
+  {
+    id: 0,
+    name: "Cold War in Europe",
+    icon: "\ud83d\uddfa\ufe0f",
+    color: "#1a3a5c",
+    questions: [
+    { type: "fb",
+      q: "The military alliance formed by the United States and Western European nations in 1949 as a collective defense against Soviet aggression was called __________.",
+      ans: "NATO",
+      alts: ["nato", "North Atlantic Treaty Organization"],
+      hint: "Four letters \u2014 still exists today",
+      explain: "NATO \u2014 the North Atlantic Treaty Organization \u2014 was founded in 1949 by the U.S., Canada, and ten Western European nations. It established that an attack on any member would be considered an attack on all, creating a collective deterrent against Soviet expansion.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "mc",
+      q: "The Soviet Union's military alliance, formed in 1955 in response to NATO, was called the:",
+      opts: ["Comintern", "Warsaw Pact", "Eastern Bloc Treaty", "Politburo Alliance"],
+      ans: 1,
+      explain: "The Warsaw Pact bound the Soviet Union and seven Eastern European satellite states into a mutual defense treaty. It was Moscow's direct answer to NATO and ensured Soviet military dominance over Eastern Europe until it dissolved in 1991.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "tf",
+      q: "Under Soviet collectivization, farmers were allowed to keep their land privately as long as they met government production quotas.",
+      ans: false,
+      explain: "Soviet collectivization forcibly transferred private farmland to state-controlled collective farms. Farmers lost their land entirely. Those who resisted \u2014 particularly the wealthier peasants called 'kulaks' \u2014 were executed, imprisoned, or deported to gulags.",
+      video: {title: "Crash Course World History: Communism", url: "https://www.youtube.com/watch?v=6OF4BFYYMQU"} },
+    { type: "mc",
+      q: "Soviet 'satellite states' in Eastern Europe after WWII were countries that:",
+      opts: ["Voluntarily chose communist governments through free democratic elections", "Were economically dependent on U.S. Marshall Plan aid", "Were politically controlled by the Soviet Union and had communist governments imposed on them", "Had signed mutual defense treaties with the Soviet Union as equal partners"],
+      ans: 2,
+      explain: "After WWII, the Soviet Union installed communist puppet governments across Eastern Europe. These satellite states had no real independence \u2014 their elections were rigged, their economies subordinated to Moscow, and their military forces integrated into the Warsaw Pact.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "fb",
+      q: "Winston Churchill coined the term '__________ Curtain' in a 1946 speech to describe the division between Soviet-controlled Eastern Europe and the democratic West.",
+      ans: "Iron",
+      alts: ["iron"],
+      hint: "A heavy metal \u2014 the name suggests something impenetrable",
+      explain: "Churchill delivered his famous 'Iron Curtain' speech in Fulton, Missouri in March 1946, warning that the Soviet Union had divided Europe with an impenetrable barrier of political control.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "mc",
+      q: "Nikita Khrushchev's approach differed from Stalin's primarily in that he:",
+      opts: ["Abandoned communism in favor of a mixed market economy", "Allowed Eastern European nations full independence from Soviet control", "Pursued a policy of 'de-Stalinization,' criticizing Stalin's cult of personality and reducing some political terror", "Opened the Soviet Union to free elections at the local level"],
+      ans: 2,
+      explain: "In his 1956 'Secret Speech,' Khrushchev shocked the Communist Party by denouncing Stalin's purges, cult of personality, and crimes. He released many political prisoners and allowed slightly more cultural freedom \u2014 though de-Stalinization had clear limits.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "tf",
+      q: "The Warsaw Pact was the Soviet Union's direct military response to West Germany joining NATO in 1955.",
+      ans: true,
+      explain: "West Germany's admission to NATO in May 1955 alarmed the Soviet Union. Just days later, the USSR formed the Warsaw Pact with seven Eastern European nations. The two alliances now faced each other directly across the Iron Curtain.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "mc",
+      q: "Which of the following best describes how the Soviet command economy differed from the American free market economy?",
+      opts: ["The Soviet economy grew faster because central planning eliminated wasteful competition", "The government set all production targets, prices, and distribution, leaving no room for private enterprise or consumer choice", "Soviet workers earned higher wages because profits went directly to employees instead of shareholders", "The two economies were structurally similar \u2014 the main difference was that Soviet industries were newer"],
+      ans: 1,
+      explain: "In the Soviet command economy, the state owned all businesses and made all economic decisions through Five-Year Plans. This contrasted sharply with the U.S. free market where businesses competed for profit and consumer demand drove production.",
+      video: {title: "Crash Course Economics: Communism vs Capitalism", url: "https://www.youtube.com/watch?v=ubNHIBiDGCo"} },
+    { type: "mc",
+      q: "The Truman Doctrine (1947) committed the United States to:",
+      opts: ["Providing economic aid to rebuild any nation devastated by WWII regardless of its government", "Supporting free peoples resisting subjugation by armed minorities or outside communist pressure", "Using military force to liberate any country that had already fallen under communist control", "Forming a military alliance with any nation that shared a border with the Soviet Union"],
+      ans: 1,
+      explain: "Announced in March 1947, the Truman Doctrine pledged U.S. support to Greece and Turkey, which faced communist insurgencies. It established the broader principle that the U.S. would support free peoples resisting Soviet pressure anywhere in the world.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "mc",
+      q: "The Marshall Plan (1948) provided U.S. economic aid to Western Europe primarily to:",
+      opts: ["Repay European nations for their contributions to winning WWII", "Prevent economic desperation from making Western European nations vulnerable to communism", "Open European markets exclusively to American exports", "Fund the formation of NATO and Western European defense spending"],
+      ans: 1,
+      explain: "Secretary of State George Marshall proposed $13 billion in American aid to rebuild war-devastated Western Europe. By rebuilding European economies, the U.S. aimed to make communism politically unattractive. It worked \u2014 Western Europe recovered rapidly.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/berlin-airlift.png?alt=media&token=",
+      attribution: "West Berlin children wave at a U.S. supply plane during the Berlin Airlift, 1948\u20131949. Allied aircraft flew over 200,000 flights to supply the blockaded city. (U.S. Air Force / Public Domain)",
+      answerType: "mc",
+      q: "This photograph was taken during the Berlin Airlift of 1948\u201349. What did the Western response to Stalin's blockade demonstrate about Cold War strategy?",
+      opts: ["That the West was willing to risk direct military confrontation with Soviet ground forces to break the blockade", "That Western nations would use creative, persistent, non-military means to resist Soviet pressure and defend democratic outposts", "That the United States had enough air power to supply any city in Europe indefinitely without any strain", "That West Berlin's citizens preferred Soviet rule to the hardships caused by the Western supply effort"],
+      ans: 1,
+      explain: "Rather than challenge the Soviet blockade with armed convoys, the West chose an airlift. For 11 months, Allied planes landed every few minutes at West Berlin's airports. Stalin lifted the blockade in May 1949, having failed to force the West out of Berlin without firing a shot.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/soviet-gulag.png?alt=media&token=",
+      attribution: "Prisoners performing forced labor at a Soviet gulag camp, Siberia, USSR, c. 1930s\u20131940s. An estimated 18 million people passed through the gulag system under Stalin. (Public Domain)",
+      answerType: "mc",
+      q: "This photograph shows prisoners at a Soviet gulag. What does the gulag system reveal about the nature of Stalin's rule?",
+      opts: ["That Stalin used forced labor primarily to build economic infrastructure and had no political motivation", "That the gulag system was a small-scale program targeting only foreign spies and war criminals", "That Stalin used fear, imprisonment, and forced labor as tools of political control \u2014 eliminating real and imagined opposition and terrorizing the broader population into submission", "That most gulag prisoners were released within a year after completing re-education programs"],
+      ans: 2,
+      explain: "The gulag system held an estimated 18 million people between 1930 and 1953. Prisoners included political dissidents, ethnic minorities, intellectuals, and anyone denounced by neighbors. The camps served dual purposes: eliminating opposition and providing forced labor for Soviet industrialization.",
+      video: {title: "History Channel: Stalin's Gulag", url: "https://www.youtube.com/watch?v=HBkkFkNJFRc"} }
+    ]
+  },
+  {
+    id: 1,
+    name: "Cold War in the Americas",
+    icon: "\ud83c\udf0e",
+    color: "#3a1a1a",
+    questions: [
+    { type: "mc",
+      q: "The term 'brinkmanship,' associated with Secretary of State John Foster Dulles in the 1950s, referred to:",
+      opts: ["Using economic sanctions to pressure communist governments into reform", "Building up conventional military forces to match Soviet troop strength in Europe", "Pushing dangerous situations to the very edge of war to force the other side to back down", "Secretly funding anti-communist rebel groups in developing nations"],
+      ans: 2,
+      explain: "Dulles argued that the willingness to go to the brink of war \u2014 including threatening nuclear retaliation \u2014 was the best deterrent against Soviet aggression.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "tf",
+      q: "Mutually Assured Destruction (MAD) made nuclear war more likely because both sides knew they could survive a first strike and retaliate.",
+      ans: false,
+      explain: "MAD actually made nuclear war less likely. The logic was that since any nuclear attack would guarantee the attacker's own destruction in retaliation, launching a first strike would be suicidal.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "fb",
+      q: "The secret U.S. government agency responsible for planning the Bay of Pigs invasion and many other Cold War covert operations was the __________.",
+      ans: "CIA",
+      alts: ["cia", "Central Intelligence Agency"],
+      hint: "Three letters \u2014 America's spy agency",
+      explain: "The Central Intelligence Agency (CIA) became the primary instrument of American covert action during the Cold War, engineering coups, funding anti-communist movements, and running surveillance operations against the Soviet Union.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "mc",
+      q: "Fidel Castro's revolution in Cuba alarmed the United States primarily because:",
+      opts: ["Cuba had large oil reserves that would now be under Soviet control", "A communist government allied with the Soviet Union had taken power just 90 miles from American shores", "Cuba's military was large enough to directly threaten U.S. military bases in the Caribbean", "Castro had publicly announced plans to spread revolution to all of Latin America immediately"],
+      ans: 1,
+      explain: "When Castro took power in 1959 and aligned Cuba with the Soviet Union, a Soviet-allied communist state 90 miles from Florida could serve as a base for Soviet military operations and the spread of revolutionary ideology throughout Latin America.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "mc",
+      q: "The hotline established between Washington and Moscow after the Cuban Missile Crisis was created to:",
+      opts: ["Allow Soviet and American diplomats to negotiate trade agreements directly", "Enable direct communication between the two leaders to prevent miscommunication that could trigger nuclear war", "Coordinate joint military operations against terrorist threats", "Share intelligence about nuclear weapons programs with neutral nations"],
+      ans: 1,
+      explain: "During the Cuban Missile Crisis, written cables took hours to decode and deliver. The terrifying realization that miscommunication could start a nuclear war led directly to the 'hotline' \u2014 a direct teletype link between the White House and the Kremlin \u2014 established in 1963.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "tf",
+      q: "Che Guevara was a Cuban-born revolutionary who fought alongside Fidel Castro and later attempted to spread revolution to other countries.",
+      ans: false,
+      explain: "Che Guevara was born in Argentina, not Cuba. He met Fidel Castro in Mexico in 1955 and joined the Cuban Revolution. After its success, Guevara attempted to export revolution to the Congo and Bolivia, where he was captured and executed in 1967.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "mc",
+      q: "Nixon's policy of d\u00e9tente in the 1970s represented a shift in Cold War strategy because it:",
+      opts: ["Abandoned containment entirely in favor of recognizing communist governments as permanent", "Sought to reduce Cold War tensions through diplomacy, trade, and arms control agreements", "Focused exclusively on the Soviet Union while ignoring communist expansion in Asia", "Transferred responsibility for containment from the U.S. military to the United Nations"],
+      ans: 1,
+      explain: "D\u00e9tente \u2014 French for 'relaxation' \u2014 was Nixon and Kissinger's recognition that pure confrontation was unsustainable. Through diplomacy, Nixon opened relations with China (1972), signed the SALT I arms control treaty, and reduced Cold War tensions.",
+      video: {title: "Crash Course US History: Nixon and D\u00e9tente", url: "https://www.youtube.com/watch?v=VHV5tJsk_2M"} },
+    { type: "mc",
+      q: "The Monroe Doctrine was repeatedly invoked during the Cold War to justify:",
+      opts: ["U.S. military bases throughout Western Europe", "American intervention in Latin American nations to prevent Soviet influence in the Western Hemisphere", "Trade embargoes against any nation that traded with communist countries", "U.S. support for democratic elections in former European colonies"],
+      ans: 1,
+      explain: "Originally declared in 1823, the Monroe Doctrine stated that the Western Hemisphere was off-limits to European powers. During the Cold War, it was reinterpreted to justify U.S. intervention against communist movements in Latin America \u2014 including the Bay of Pigs and support for the Nicaraguan Contras.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "fb",
+      q: "The U.S.-backed rebel fighters who opposed the Sandinista communist government in Nicaragua during the 1980s were called __________.",
+      ans: "Contras",
+      alts: ["contras", "the contras"],
+      hint: "Spanish for 'against' or 'counter'",
+      explain: "The Reagan administration covertly funded the Contras. When Congress passed the Boland Amendment prohibiting this funding, Reagan's team secretly used profits from illegal arms sales to Iran to continue \u2014 leading to the Iran-Contra scandal.",
+      video: {title: "Crash Course US History: Reagan and the Cold War", url: "https://www.youtube.com/watch?v=x3kJRCVRVRQ"} },
+    { type: "mc",
+      q: "The nuclear arms race resulted in both nations building thousands of warheads. What was the strategic logic behind Mutually Assured Destruction?",
+      opts: ["Each nation planned to use its weapons in a preemptive first strike to win quickly", "Both sides believed that having more weapons would force the other to surrender without fighting", "Having enough weapons to survive a first strike and still destroy the attacker made launching any nuclear attack suicidal for the aggressor", "The buildup was mainly for domestic political purposes \u2014 neither side ever seriously considered using the weapons"],
+      ans: 2,
+      explain: "MAD rested on 'second-strike capability' \u2014 the ability to absorb a nuclear first strike and still retaliate with devastating force. As long as both sides had this capability, neither could 'win' a nuclear war.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/fidel-castro.png?alt=media&token=",
+      attribution: "Fidel Castro addressing an international conference, early 1960s. Castro led Cuba's communist government from 1959 until 2008. (Public Domain)",
+      answerType: "mc",
+      q: "This photograph shows Fidel Castro shortly after taking power in Cuba. Why did Castro's rise represent such a significant challenge to U.S. Cold War policy?",
+      opts: ["Castro immediately nationalized American-owned businesses in Cuba, causing direct economic damage to U.S. companies", "Cuba's communist revolution \u2014 aligned with the Soviet Union \u2014 proved that containment had failed in America's own backyard, 90 miles from Florida", "Castro was personally popular with the American public, making it politically difficult for the U.S. to oppose him", "Cuba's military was powerful enough to threaten the U.S. mainland with conventional weapons"],
+      ans: 1,
+      explain: "Castro's revolution was a massive embarrassment for U.S. Cold War policy. Despite years of supporting the Batista regime to prevent communism, a Soviet-aligned communist state had emerged 90 miles from Florida. The failed Bay of Pigs invasion (1961) deepened the humiliation.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/u2-spy-plane-cuba.png?alt=media&token=",
+      attribution: "CIA U-2 reconnaissance photograph showing Soviet missile installation sites under construction in Cuba, October 1962. This image triggered the 13-day Cuban Missile Crisis. (CIA / Public Domain)",
+      answerType: "mc",
+      q: "This is one of the actual CIA U-2 spy plane photographs that triggered the Cuban Missile Crisis. What does this photograph reveal about Cold War intelligence gathering?",
+      opts: ["That the U.S. and Soviet Union routinely shared intelligence with each other to prevent accidental war", "That the CIA had developed aerial reconnaissance technology capable of secretly photographing Soviet installations \u2014 giving critical intelligence but also creating diplomatic crises when such flights were discovered", "That Cuba had invited U.S. inspection of its military facilities to prove its defensive intentions", "That Soviet missile installations were clearly visible from the ground, making aerial surveillance unnecessary"],
+      ans: 1,
+      explain: "U-2 spy planes flew at 70,000 feet \u2014 too high for Soviet fighters to reach. Two years after the U-2 incident damaged U.S.-Soviet relations, U-2 photos over Cuba gave Kennedy undeniable proof of Soviet missiles \u2014 triggering the most dangerous 13 days of the Cold War.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/kennedy-khrushchev-cartoon.png?alt=media&token=",
+      attribution: "Political cartoon depicting Kennedy and Khrushchev arm-wrestling during the Cuban Missile Crisis, with both sitting on hydrogen bombs. By Herluf Bidstrup, c. 1962. (Public Domain)",
+      answerType: "mc",
+      q: "This political cartoon shows Kennedy and Khrushchev arm-wrestling while seated on hydrogen bombs. What Cold War concept does the cartoonist most powerfully illustrate?",
+      opts: ["Brinkmanship \u2014 that both leaders were willing to push the confrontation to the very edge of nuclear war to force the other to back down", "D\u00e9tente \u2014 that both leaders preferred diplomacy and negotiation over military confrontation", "Containment \u2014 that the United States was successfully preventing Soviet expansion through determined resistance", "The domino theory \u2014 that a Soviet victory in Cuba would trigger communist takeovers across Latin America"],
+      ans: 0,
+      explain: "The cartoon captures brinkmanship \u2014 the terrifying logic of the Cuban Missile Crisis. Both Kennedy and Khrushchev were willing to risk nuclear war to avoid humiliation. The hydrogen bombs remind viewers what was at stake. Khrushchev ultimately blinked first, agreeing to remove the missiles.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "mc",
+      q: "The Bay of Pigs invasion (1961) failed primarily because:",
+      opts: ["The Soviet Union sent military forces to defend Cuba before U.S.-backed exile forces could land", "Kennedy cancelled crucial U.S. air support to maintain plausible deniability, leaving the exile brigade outnumbered and exposed", "Cuba's military had secretly received Soviet weapons that neutralized the invasion force before it reached shore", "The invasion force landed in the wrong location due to a last-minute change of plan"],
+      ans: 1,
+      explain: "Kennedy inherited Eisenhower's CIA plan but cancelled the second air strike to maintain 'plausible deniability.' Without air cover, the 1,400 Cuban exile fighters were quickly overwhelmed by Castro's forces. The disaster embarrassed the Kennedy administration and emboldened the Soviet Union ahead of the Cuban Missile Crisis.",
+      video: {title: "Crash Course US History: JFK and the Cuban Crisis", url: "https://www.youtube.com/watch?v=jO_RIWVCBzg"} },
+    { type: "mc",
+      q: "U.S. involvement in El Salvador's civil war during the 1980s primarily consisted of:",
+      opts: ["Deploying U.S. combat troops to fight alongside Salvadoran government forces against FMLN rebels", "Providing military aid and training to El Salvador's government to prevent a leftist rebel victory, despite documented human rights abuses", "Negotiating a UN-sponsored peace agreement between the government and rebel forces", "Imposing economic sanctions to pressure the Salvadoran government into holding democratic elections"],
+      ans: 1,
+      explain: "The Reagan administration provided over $1 billion in military and economic aid to El Salvador's government, framing the conflict as Cold War containment. Critics pointed to the 1981 El Mozote massacre and the assassination of Archbishop Óscar Romero as evidence that U.S. aid was sustaining a government that committed serious human rights abuses.",
+      video: {title: "Crash Course US History: Reagan and the Cold War", url: "https://www.youtube.com/watch?v=x3kJRCVRVRQ"} },
+    { type: "mc",
+      q: "Reagan's 1983 invasion of Grenada was significant in Cold War terms because it:",
+      opts: ["Was the first time the U.S. used nuclear threats to force a Soviet ally to surrender", "Demonstrated U.S. willingness to use direct military force to remove a Marxist government in the Western Hemisphere", "Led to a direct military confrontation between U.S. and Soviet naval forces in the Caribbean", "Was the first U.S. military action authorized by the United Nations during the Cold War"],
+      ans: 1,
+      explain: "After a Marxist coup overthrew Grenada's government, Reagan ordered an invasion to protect American medical students and prevent Soviet expansion. It was the first direct U.S. military intervention in the Western Hemisphere since 1965 and signaled Reagan's willingness to use force — not just covert action — to roll back communist governments.",
+      video: {title: "Crash Course US History: Reagan and the Cold War", url: "https://www.youtube.com/watch?v=x3kJRCVRVRQ"} }
+    ]
+  },
+  {
+    id: 2,
+    name: "Cold War in Asia",
+    icon: "\u2694\ufe0f",
+    color: "#1a3a1a",
+    questions: [
+    { type: "mc",
+      q: "General Douglas MacArthur was relieved of command during the Korean War by President Truman because:",
+      opts: ["MacArthur had led an unauthorized advance deep into Chinese territory", "MacArthur publicly disagreed with Truman's limited war strategy and called for expanding the war against China", "MacArthur's Inchon landing had failed and cost thousands of American lives", "MacArthur had secretly negotiated a ceasefire with North Korea without Truman's knowledge"],
+      ans: 1,
+      explain: "MacArthur openly challenged Truman's strategy of limited war, writing letters to Republican congressional leaders calling for bombing Chinese bases. The episode established the critical principle of civilian control over the military.",
+      video: {title: "Crash Course US History: Korean War", url: "https://www.youtube.com/watch?v=vP3rqtjpqFI"} },
+    { type: "fb",
+      q: "The communist leader who won the Chinese Civil War in 1949 and established the People's Republic of China was __________.",
+      ans: "Mao Zedong",
+      alts: ["mao", "mao zedong", "mao tse-tung", "Mao"],
+      hint: "Chairman of the Chinese Communist Party",
+      explain: "Mao Zedong led the Chinese Communist Party to victory over Chiang Kai-shek's Nationalists in 1949. The 'loss of China' to communism was a massive political shock in the United States and intensified fears about the spread of communism across Asia.",
+      video: {title: "Crash Course World History: Mao Zedong", url: "https://www.youtube.com/watch?v=pqH4pJpzstw"} },
+    { type: "tf",
+      q: "The United States formally declared war on North Vietnam after the Gulf of Tonkin incident in 1964.",
+      ans: false,
+      explain: "The Gulf of Tonkin Resolution gave President Johnson authority to use military force in Southeast Asia without a formal declaration of war. The U.S. never formally declared war on North Vietnam \u2014 a distinction that became deeply controversial.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "mc",
+      q: "Ho Chi Minh was significant in the Vietnam War because he:",
+      opts: ["Was the U.S.-backed leader of South Vietnam who requested American military intervention", "Led North Vietnam and the Viet Cong as a communist revolutionary committed to unifying Vietnam under his government", "Was a Soviet military advisor who trained the North Vietnamese army", "Was the South Vietnamese general who planned the Tet Offensive"],
+      ans: 1,
+      explain: "Ho Chi Minh had fought for Vietnamese independence his entire life \u2014 first against French colonial rule, then the Japanese, and finally the Americans. To many Vietnamese his cause was primarily about independence rather than ideology, making him far more popular than U.S. policymakers understood.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "mc",
+      q: "The 'credibility gap' during the Vietnam War referred to:",
+      opts: ["The gap between U.S. military technology and North Vietnamese guerrilla tactics", "The growing difference between what the government told the public about the war and the reality on the ground", "The gap in military spending between the United States and North Vietnam", "The difference between what South Vietnam's army could do versus what U.S. generals claimed"],
+      ans: 1,
+      explain: "As the Vietnam War dragged on, Americans increasingly noticed a gap between official optimism and what journalists were actually reporting. After the Tet Offensive, the credibility gap became a chasm and trust in government collapsed for a generation.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "tf",
+      q: "The draft during the Vietnam War fell disproportionately on working-class and minority Americans because college students could receive deferments that allowed them to avoid military service.",
+      ans: true,
+      explain: "College deferments meant that wealthier Americans could largely avoid the draft by staying in school. Working-class men and minorities who couldn't afford college were far more likely to be drafted and sent to Vietnam, creating deep resentment and fueling the anti-war movement.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "fb",
+      q: "The guerrilla fighters who fought for North Vietnam's cause within South Vietnam were called the Viet __________.",
+      ans: "Cong",
+      alts: ["cong"],
+      hint: "Short for 'Vietnamese Communist'",
+      explain: "The Viet Cong (National Liberation Front) were South Vietnamese communist guerrillas fighting to overthrow the South Vietnamese government. Their use of guerrilla tactics \u2014 blending into the civilian population and using tunnels \u2014 made them extraordinarily difficult to combat.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "mc",
+      q: "The War Powers Act of 1973 was passed by Congress in response to Vietnam in order to:",
+      opts: ["Formally end U.S. military involvement in Southeast Asia", "Limit the president's ability to commit U.S. forces to combat without congressional approval", "Authorize the CIA to conduct covert operations in communist countries without oversight", "Create a permanent military draft to ensure the U.S. was always prepared for future conflicts"],
+      ans: 1,
+      explain: "The War Powers Act required the president to notify Congress within 48 hours of committing forces to combat and limited unauthorized military action to 60 days \u2014 Congress's attempt to reclaim war-making authority after the Gulf of Tonkin Resolution.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "mc",
+      q: "Which of the following best explains why the United States struggled to win the Vietnam War despite overwhelming military superiority?",
+      opts: ["North Vietnam had better weapons technology supplied by the Soviet Union and China", "The U.S. military refused to use its full firepower out of respect for Vietnamese civilians", "North Vietnam used guerrilla tactics in dense terrain while the South Vietnamese government lacked popular support \u2014 making conventional military advantages largely irrelevant", "The South Vietnamese army was secretly working with North Vietnam against American forces"],
+      ans: 2,
+      explain: "The U.S. military was built for conventional warfare. In Vietnam it faced guerrilla fighters who avoided pitched battles and blended into the civilian population. More fundamentally, the South Vietnamese government was corrupt and unpopular, meaning the U.S. was fighting to preserve a regime its own people didn't support.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/antiwar-protest-1971.png?alt=media&token=",
+      attribution: "Anti-Vietnam War protest in Washington D.C., April 1971. A demonstrator holds a sign reading 'My Son Was Killed in Vietnam \u2014 What For?' (AP Photo / Public Domain)",
+      answerType: "mc",
+      q: "This photograph was taken at a massive anti-war protest in Washington D.C. in 1971. What does this sign reveal about how the Vietnam War divided American society?",
+      opts: ["That anti-war protesters were primarily young college students with no personal connection to the war", "That opposition to the war was broad and deeply personal \u2014 cutting across generations as Americans questioned whether the sacrifices were justified", "That most Americans had opposed U.S. involvement in Vietnam from the very beginning", "That the anti-war movement was primarily organized by communist sympathizers working to undermine American military morale"],
+      ans: 1,
+      explain: "The sign \u2014 held by what appears to be a middle-aged parent who lost a son \u2014 powerfully illustrates how the anti-war movement was not just a youth phenomenon. By 1971, with over 50,000 Americans dead and no clear path to victory, opposition had spread across generations.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/agent-orange-vietnam.png?alt=media&token=",
+      attribution: "U.S. Air Force planes spray Agent Orange defoliant over dense jungle in South Vietnam, c. 1965\u20131970. Operation Ranch Hand sprayed approximately 20 million gallons of herbicides. (U.S. Air Force / Public Domain)",
+      answerType: "mc",
+      q: "This photograph shows U.S. military aircraft spraying Agent Orange defoliant over Vietnamese jungle. What does this tactic reveal about the challenges the U.S. faced?",
+      opts: ["That the U.S. had no effective ground forces and relied entirely on air power", "That the U.S. deliberately targeted civilian farmland to cause famine and force a surrender", "That the dense jungle gave enemy forces a massive tactical advantage \u2014 forcing the U.S. to use chemical defoliants to eliminate cover and disrupt supply lines", "That Agent Orange was a harmless herbicide used only to protect troops from disease"],
+      ans: 2,
+      explain: "The Vietnamese jungle was a key Viet Cong asset. Agent Orange was designed to strip leaves from trees and destroy crops, eliminating cover. It caused massive environmental destruction and exposed hundreds of thousands to dioxin, causing cancers and birth defects for generations.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/cultural-revolution.png?alt=media&token=",
+      attribution: "Victims of Mao Zedong's Cultural Revolution are publicly humiliated at a 'struggle session' in China, c. 1966\u20131967. An estimated 500,000 to 2 million people died during the Cultural Revolution (1966\u20131976). (Public Domain)",
+      answerType: "mc",
+      q: "This photograph shows victims of Mao's Cultural Revolution being publicly humiliated. What does this image reveal about communist rule under Mao?",
+      opts: ["That Mao's government was primarily focused on economic development and used public criticism only as an educational tool", "That the Cultural Revolution was a grassroots student movement that Mao was unable to control", "That Mao used mass campaigns of terror and humiliation to purge political rivals, enforce ideological conformity, and destroy traditional Chinese culture \u2014 at enormous human cost", "That public struggle sessions were a long-standing Chinese cultural tradition Mao simply continued"],
+      ans: 2,
+      explain: "The Cultural Revolution (1966\u20131976) was Mao's attempt to reassert control by unleashing Red Guards to attack 'class enemies,' intellectuals, and traditional culture. Millions were publicly humiliated, imprisoned, or killed. Universities were shut for years.",
+      video: {title: "Crash Course World History: Mao's China", url: "https://www.youtube.com/watch?v=pqH4pJpzstw"} },
+    { type: "stimulus",
+      stimType: "quote",
+      stimulus: "\"We are mired in stalemate...it seems now more certain than ever that the bloody experience of Vietnam is to end in a stalemate...To say that we are mired in stalemate seems the only realistic, yet unsatisfactory conclusion...the only rational way out then will be to negotiate, not as victors, but as an honorable people who lived up to their pledge to defend democracy, and did the best they could.\"\n\n\u2014 CBS News anchor Walter Cronkite, broadcast editorial following the Tet Offensive, February 27, 1968",
+      attribution: "Walter Cronkite, CBS Evening News editorial, February 27, 1968. After Cronkite's broadcast, President Johnson reportedly said: 'If I've lost Cronkite, I've lost middle America.'",
+      answerType: "mc",
+      q: "After personally traveling to Vietnam following the Tet Offensive, Walter Cronkite delivered this on-air editorial. What made this broadcast a turning point in the Vietnam War?",
+      opts: ["It was the first time an American journalist had reported from Vietnam, giving the public their first accurate picture of the war", "Cronkite's credibility and mainstream status meant that his conclusion the war was unwinnable represented a collapse of public consensus that even the president could not ignore", "The broadcast caused Congress to immediately cut off funding for the war, forcing Johnson to begin withdrawal", "It revealed classified military information about U.S. casualties that the government had been hiding"],
+      ans: 1,
+      explain: "Cronkite was not a radical \u2014 he was a trusted, mainstream, middle-American voice. When even Cronkite concluded the war was a stalemate, it signaled that mainstream America was losing faith. Johnson's reported reaction \u2014 'If I've lost Cronkite, I've lost middle America' \u2014 showed the broadcast's weight. Three weeks later, Johnson announced he would not seek reelection.",
+      video: {title: "Crash Course US History: Vietnam", url: "https://www.youtube.com/watch?v=W5nFBSw3KCI"} }
+    ]
+  },
+  {
+    id: 3,
+    name: "The Space Race",
+    icon: "\ud83d\ude80",
+    color: "#0a0a2a",
+    questions: [
+    { type: "mc",
+      q: "The term 'military-industrial complex,' coined by President Eisenhower in his 1961 farewell address, referred to:",
+      opts: ["The Soviet Union's system of state-owned weapons factories", "The growing alliance between defense contractors, the military, and government policymakers whose combined influence could distort national priorities", "The network of NATO military bases forming the backbone of Western European defense", "The joint U.S.-Soviet agreement to develop space technology for peaceful purposes"],
+      ans: 1,
+      explain: "Eisenhower \u2014 a former five-star general \u2014 warned that the permanent wartime economy of the Cold War had created a dangerous relationship between the military, weapons manufacturers, and Congress whose combined money and prestige could corrupt the democratic process.",
+      video: {title: "Crash Course US History: The 1950s", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "fb",
+      q: "The United States' civilian space agency, created in 1958 directly in response to Sputnik, was called __________.",
+      ans: "NASA",
+      alts: ["nasa", "National Aeronautics and Space Administration"],
+      hint: "Four letters",
+      explain: "The National Aeronautics and Space Administration was created in 1958. Its creation reflected the urgency Americans felt after Sputnik \u2014 the U.S. needed a coordinated civilian space program to compete with the Soviets.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "mc",
+      q: "An ICBM \u2014 Intercontinental Ballistic Missile \u2014 was significant in the Cold War because it:",
+      opts: ["Could carry conventional explosives accurately enough to destroy a specific building from 1,000 miles away", "Could deliver a nuclear warhead to targets thousands of miles away, making every major city on Earth vulnerable to nuclear attack", "Was the first weapon system that could be launched from submarines, making it impossible to detect", "Was purely a defensive weapon designed to intercept and destroy incoming Soviet missiles"],
+      ans: 1,
+      explain: "ICBMs \u2014 the same rocket technology used to launch Sputnik \u2014 could carry nuclear warheads from the Soviet Union to the United States in roughly 30 minutes. This meant there was no longer any safe distance from a nuclear enemy.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "tf",
+      q: "Alan Shepard became the first American in space in May 1961, just weeks after Soviet cosmonaut Yuri Gagarin had become the first human in space.",
+      ans: true,
+      explain: "Gagarin orbited Earth on April 12, 1961. Just 23 days later, Alan Shepard became the first American in space. Kennedy's moon challenge came just weeks after Shepard's flight.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "mc",
+      q: "Why was Neil Armstrong's moon landing in July 1969 considered a Cold War victory as much as a scientific achievement?",
+      opts: ["The U.S. planted military equipment on the moon giving it a strategic advantage over the Soviet Union", "It fulfilled Kennedy's challenge \u2014 proving that American democratic capitalism could out-innovate and outperform Soviet communism in the ultimate technological competition", "The Soviet Union immediately abandoned its space program after Armstrong's landing, conceding defeat", "It demonstrated that American weapons technology was advanced enough to deter any Soviet nuclear attack"],
+      ans: 1,
+      explain: "Kennedy had framed the moon challenge explicitly as a Cold War competition. When Apollo 11 succeeded, it proved that the American system of free inquiry and market-driven innovation could achieve something the Soviet command economy could not match.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "mc",
+      q: "The Soviet launch of Sputnik in October 1957 had which immediate effect on American education?",
+      opts: ["Congress immediately nationalized all private universities to increase scientific research output", "The National Defense Education Act dramatically increased federal funding for science, math, and foreign language education", "American high schools eliminated social studies courses to focus exclusively on STEM subjects", "The U.S. government recruited Soviet scientists to help rebuild the American science education system"],
+      ans: 1,
+      explain: "Sputnik triggered a crisis of confidence in American education. The National Defense Education Act (1958) poured federal money into science, math, and foreign language education for the first time, fundamentally changing the federal government's role in education.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "tf",
+      q: "The Space Race had no connection to nuclear weapons \u2014 it was purely a scientific and engineering competition between the two superpowers.",
+      ans: false,
+      explain: "The rockets that launched Sputnik and the Apollo missions were essentially the same technology as ICBMs capable of delivering nuclear warheads. Every space achievement had direct military implications \u2014 the Space Race and the Arms Race were two faces of the same competition.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "fb",
+      q: "The first artificial satellite successfully launched into Earth's orbit, by the Soviet Union in October 1957, was called __________.",
+      ans: "Sputnik",
+      alts: ["sputnik", "Sputnik 1"],
+      hint: "Russian for 'fellow traveler'",
+      explain: "Sputnik's launch on October 4, 1957 stunned the world. The psychological impact on Americans was enormous: Soviet technology had beaten the U.S. to space, and the rockets that launched Sputnik could carry nuclear warheads to American cities.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "mc",
+      q: "How did the Space Race reflect the broader ideological competition of the Cold War?",
+      opts: ["It was primarily about scientific knowledge \u2014 both superpowers genuinely wanted to advance human understanding", "Each space milestone was used as propaganda to demonstrate that one political system \u2014 capitalism or communism \u2014 was more capable of producing human achievement", "It was entirely about military advantage \u2014 both sides were exclusively focused on weaponizing space", "The Space Race was irrelevant to ordinary citizens and only mattered to scientists and military planners"],
+      ans: 1,
+      explain: "Every space achievement was immediately turned into propaganda. Soviet firsts \u2014 Sputnik, Gagarin, the first spacewalk \u2014 proved communist central planning was superior. American achievements \u2014 especially Apollo 11 \u2014 proved freedom and innovation could outperform rigid communist systems.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "mc",
+      q: "The 1963 Limited Nuclear Test Ban Treaty was significant because it:",
+      opts: ["Required both superpowers to destroy half their nuclear arsenals within ten years", "Prohibited all nuclear weapons testing including underground tests", "Banned nuclear tests in the atmosphere, underwater, and in space \u2014 reducing radioactive fallout and signaling a willingness to negotiate arms control", "Established a United Nations inspection system to verify compliance with test limits"],
+      ans: 2,
+      explain: "By the early 1960s, above-ground nuclear testing had spread radioactive fallout across the entire planet, contaminating food supplies worldwide. The Limited Test Ban Treaty was the first nuclear arms control agreement between the U.S. and USSR.",
+      video: {title: "Crash Course US History: Cold War", url: "https://www.youtube.com/watch?v=A6n8GqECeHs"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/sputnik-1.png?alt=media&token=",
+      attribution: "Soviet technician working on Sputnik 1 before its launch, circa 1957. Sputnik orbited Earth every 98 minutes. (Soviet Space Program Archive / Public Domain)",
+      answerType: "mc",
+      q: "This photograph shows Soviet technicians preparing Sputnik 1. Why did this small metal sphere cause such alarm in the United States?",
+      opts: ["Americans feared the Soviets would use Sputnik to spy on U.S. military installations from orbit", "Sputnik proved the Soviets had mastered rocket technology capable of putting objects into orbit \u2014 and those same rockets could deliver nuclear warheads to any American city within 30 minutes", "The launch violated an international treaty the U.S. believed prevented the militarization of outer space", "Americans were primarily alarmed by the cost of the Soviet space program, fearing it reflected a stronger Soviet economy"],
+      ans: 1,
+      explain: "The alarm wasn't really about Sputnik itself \u2014 it was about what the launch meant. An R-7 rocket powerful enough to put a satellite in orbit was also powerful enough to carry a thermonuclear warhead to any city in the United States. The 'missile gap' debate and massive investment in American rocketry and education followed immediately.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/apollo-11-mission-control.png?alt=media&token=",
+      attribution: "NASA Mission Control employees celebrate the successful splashdown of Apollo 11, July 24, 1969, following the first crewed moon landing. (NASA / Public Domain)",
+      answerType: "mc",
+      q: "This photograph shows NASA Mission Control celebrating after Apollo 11 successfully returned to Earth. What does this scene represent in the context of the Cold War?",
+      opts: ["That the moon landing was a purely scientific triumph with no political significance", "That American technological achievement in space was a collective national effort representing the triumph of democratic, open-society innovation over Soviet central planning", "That NASA's success immediately ended the Space Race as both sides agreed to cooperate on future missions", "That the moon landing proved the Soviet space program had been fraudulent"],
+      ans: 1,
+      explain: "The Apollo program employed 400,000 people across universities, private companies, and government agencies \u2014 a uniquely American combination of public investment and private innovation. Kennedy's challenge had been met, and the message to the world was unmistakable.",
+      video: {title: "Crash Course US History: Space Race", url: "https://www.youtube.com/watch?v=OqSo4nMn8pY"} }
+    ]
+  },
+  {
+    id: 4,
+    name: "Civil Rights Era",
+    icon: "\u270a",
+    color: "#2a1a0a",
+    questions: [
+    { type: "fb",
+      q: "The 1954 Supreme Court case __________ v. Board of Education declared racial segregation in public schools unconstitutional, overturning the 'separate but equal' doctrine.",
+      ans: "Brown",
+      alts: ["brown", "Brown v Board", "brown v board"],
+      hint: "Named after Oliver Brown, a Topeka, Kansas father",
+      explain: "Brown v. Board of Education was argued by NAACP attorney Thurgood Marshall. Chief Justice Earl Warren delivered a unanimous decision declaring that 'separate educational facilities are inherently unequal.' It struck down the legal foundation of Jim Crow.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "mc",
+      q: "Jim Crow laws, enforced primarily in the South from the 1870s through the 1960s, were a system of:",
+      opts: ["Federal regulations requiring equal pay for Black and white workers", "State and local laws that enforced racial segregation and denied Black Americans equal access to public life", "Northern city ordinances that restricted where Black migrants from the South could live", "Federal voting restrictions that required all voters to pass literacy tests regardless of race"],
+      ans: 1,
+      explain: "Jim Crow laws mandated racial segregation in schools, restaurants, transportation, hospitals, and virtually every area of public life. They were backed by the threat of violence \u2014 including lynching \u2014 and enforced by a criminal justice system that offered Black Americans no protection.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "tf",
+      q: "The NAACP and SNCC used identical strategies to fight segregation \u2014 both focused primarily on legal challenges in federal courts.",
+      ans: false,
+      explain: "The NAACP primarily used legal strategies \u2014 carefully selected court cases and litigation. SNCC used direct action \u2014 sit-ins, Freedom Rides, voter registration drives. The two organizations often had generational and strategic tensions.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "mc",
+      q: "Freedom Riders in 1961 were civil rights activists who:",
+      opts: ["Marched from Selma to Montgomery to demand voting rights", "Organized sit-ins at segregated lunch counters across the Deep South", "Rode interstate buses through the South to challenge segregated bus terminals, defying Supreme Court rulings that had already declared such segregation unconstitutional", "Registered Black voters door-to-door across Mississippi during Freedom Summer"],
+      ans: 2,
+      explain: "Despite Supreme Court rulings declaring segregation in interstate bus terminals unconstitutional, Southern states simply ignored the law. Freedom Riders were met with horrific violence \u2014 buses were firebombed and riders beaten. The Kennedy administration was forced to act.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "mc",
+      q: "Bull Connor, the Commissioner of Public Safety in Birmingham, Alabama, became a symbol of violent white resistance because:",
+      opts: ["He personally led a march against civil rights activists across the Edmund Pettus Bridge", "He ordered fire hoses and police dogs turned on peaceful protesters, generating nationwide outrage when the images were broadcast on national television", "He organized the bombing of the 16th Street Baptist Church that killed four young girls", "He blocked the schoolhouse door at the University of Alabama to prevent desegregation"],
+      ans: 1,
+      explain: "Bull Connor's violent response to the Birmingham Campaign in May 1963 was pivotal. Images of fire hoses and police dogs used against peaceful protesters \u2014 including children \u2014 were broadcast across the nation, building the public pressure that led directly to the Civil Rights Act of 1964.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "tf",
+      q: "Malcolm X and Martin Luther King Jr. shared the same philosophy and strategy for achieving civil rights for Black Americans.",
+      ans: false,
+      explain: "King advocated nonviolent civil disobedience and integration \u2014 working within American democratic institutions. Malcolm X rejected integration as a goal and argued that Black Americans should build separate, self-sufficient communities. Their debate defined the ideological spectrum of the civil rights movement.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "fb",
+      q: "The strategy of deliberately and publicly breaking an unjust law while peacefully accepting the legal consequences \u2014 to expose the law's injustice and appeal to society's moral conscience \u2014 is called civil __________.",
+      ans: "disobedience",
+      alts: ["disobedience"],
+      hint: "The opposite of compliance",
+      explain: "Civil disobedience \u2014 developed by Thoreau and later Gandhi \u2014 became the core strategy of the early civil rights movement. By breaking unjust laws peacefully and accepting arrest, protesters demonstrated moral courage and created powerful images that built public sympathy.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "mc",
+      q: "The difference between de jure segregation and de facto segregation is that:",
+      opts: ["De jure segregation was enforced by law while de facto segregation existed in practice through housing patterns, economic inequality, and social custom even without legal requirement", "De jure segregation existed in the North while de facto segregation was the legal system in the South", "De facto segregation was more severe because it was actively enforced by state governments", "De jure segregation applied only to schools while de facto segregation applied to all public spaces"],
+      ans: 0,
+      explain: "The Civil Rights Act (1964) and Voting Rights Act (1965) dismantled de jure segregation. But de facto segregation \u2014 through residential patterns, school district boundaries, and economic inequality \u2014 proved far harder to address, which is why the movement increasingly turned to economic justice in the late 1960s.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "mc",
+      q: "The Black Power movement that emerged in the mid-1960s differed from the early civil rights movement primarily in that it:",
+      opts: ["Opposed all forms of political action in favor of pure economic self-sufficiency", "Rejected nonviolence and called for immediate armed revolution against the U.S. government", "Emphasized Black pride, self-determination, and community control rather than integration into white-dominated institutions", "Focused exclusively on Northern cities where de facto segregation was most severe"],
+      ans: 2,
+      explain: "Black Power emerged partly from frustration that legal victories hadn't translated into economic equality. Leaders like Stokely Carmichael argued that integration into white institutions was insufficient \u2014 Black communities needed political and economic power of their own.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "mc",
+      q: "The 24th Amendment (1964) and Voting Rights Act (1965) together addressed what persistent barrier to Black political participation?",
+      opts: ["Requirements that voters own property and pay taxes before being allowed to register", "Poll taxes and literacy tests that had been used for decades to systematically prevent Black Americans from voting", "Grandfather clauses that restricted voting to descendants of people who had voted before the Civil War", "White primary elections that excluded Black voters from the only elections that mattered in one-party Southern states"],
+      ans: 1,
+      explain: "Poll taxes required payment to vote. Literacy tests were administered selectively \u2014 a Black Ph.D. might be told they failed while an illiterate white voter passed. The 24th Amendment abolished poll taxes; the Voting Rights Act abolished literacy tests. Black voter registration in the South soared immediately.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/mlk-march-on-washington.png?alt=media&token=",
+      attribution: "Martin Luther King Jr. waves to the crowd at the March on Washington for Jobs and Freedom, August 28, 1963. Over 250,000 people attended. (Rowland Scherman / U.S. National Archives / Public Domain)",
+      answerType: "mc",
+      q: "This photograph shows Dr. King addressing the massive crowd at the March on Washington in August 1963. What did the scale and composition of this march reveal about the civil rights movement at this moment?",
+      opts: ["That the civil rights movement was exclusively a Black American cause with little white participation or support", "That the movement had grown beyond a Southern regional protest into a massive, multiracial, national coalition demanding immediate federal action on civil rights and economic justice", "That the march was primarily a musical and cultural event with limited political goals", "That the movement's leaders had abandoned nonviolent tactics in favor of mass political pressure"],
+      ans: 1,
+      explain: "The March on Washington brought together 250,000 people \u2014 Black and white, from labor unions, religious organizations, and civil rights groups across the country. King's 'I Have a Dream' speech framed civil rights as the fulfillment of America's founding promise \u2014 addressed to all Americans.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} },
+    { type: "stimulus",
+      stimType: "image",
+      imgUrl: "https://firebasestorage.googleapis.com/v0/b/america-and-world-game.firebasestorage.app/o/we-shall-overcome-newspaper.png?alt=media&token=",
+      attribution: "Front page of The Arizona Republic, March 16, 1965, reporting President Johnson's address to Congress in which he used the words 'We Shall Overcome.' (The Arizona Republic / Public Domain)",
+      answerType: "mc",
+      q: "This front page shows The Arizona Republic's coverage of Johnson's 'We Shall Overcome' address. Note also the headline about U.S. bombs in North Vietnam. What does this newspaper front page reveal about the political moment of March 1965?",
+      opts: ["That civil rights and the Vietnam War were completely separate issues with no connection to each other", "That the civil rights movement had achieved all its goals and Johnson was simply celebrating their complete victory", "That America in 1965 was simultaneously engaged in two defining struggles \u2014 a war abroad to stop communism and a war at home over the meaning of American democracy \u2014 with Johnson's presidency at the center of both", "That public opinion strongly opposed both the Vietnam War and civil rights legislation"],
+      ans: 2,
+      explain: "This remarkable front page captures America's dual crisis of 1965. Johnson invoking the movement's anthem before Congress shows how Bloody Sunday had forced his hand on voting rights. But Vietnam was already escalating \u2014 Johnson's Great Society and the Vietnam War would soon become impossible to fund simultaneously.",
+      video: {title: "Crash Course US History: Civil Rights", url: "https://www.youtube.com/watch?v=S6SjmkwGSAM"} }
+    ]
+  },
+];
+
+function px(ctx, grid, palette) {
+  const S = 4;
+  grid.forEach((row, y) => {
+    [...row].forEach((ch, x) => {
+      const col = palette[ch];
+      if (col) { ctx.fillStyle = col; ctx.fillRect(x * S, y * S, S, S); }
+    });
+  });
+}
+
+
+
+// ===========================
+// GAME STATE
+// ===========================
+let state = {
+  worldScores: {},
+  currentWorld: null,
+  currentQIndex: 0,
+  currentAnswers: [],
+  shuffledQuestions: [],
+  username: null
+};
+
+function loadState() {
+  const saved = localStorage.getItem('cw_state');
+  if (saved) {
+    try { state = JSON.parse(saved); } catch(e) {}
+  }
+}
+function saveState() {
+  try { localStorage.setItem('cw_state', JSON.stringify(state)); } catch(e) {}
+}
+
+// ===========================
+// LEADERBOARD (shared storage)
+// ===========================
+const LB_KEY = 'cw_civil_rights_leaderboard_v1';
+
+function waitForFirebase(timeout = 5000) {
+  return new Promise(resolve => {
+    if (window._fbReady) { resolve(true); return; }
+    const start = Date.now();
+    const interval = setInterval(() => {
+      if (window._fbReady) { clearInterval(interval); resolve(true); }
+      else if (Date.now() - start > timeout) { clearInterval(interval); resolve(false); }
+    }, 100);
+  });
+}
+
+async function lbLoad() {
+  try {
+    const ready = await waitForFirebase();
+    if (ready) {
+      const data = await window._fbGetAll();
+      console.log('Firebase lbLoad raw data:', JSON.stringify(data));
+      return data || {};
+    }
+  } catch(e) { console.warn('lbLoad Firebase error:', e); }
+  try {
+    const local = localStorage.getItem(LB_KEY);
+    return local ? JSON.parse(local) : {};
+  } catch(e) { return {}; }
+}
+
+async function lbSave(data, username) {
+  try {
+    const ready = await waitForFirebase();
+    if (ready) {
+      const entry = data[username];
+      console.log('Writing to Firebase path:', LB_KEY + '/' + username);
+      console.log('Entry:', JSON.stringify(entry));
+      await window._fbSetUser(username, entry);
+      console.log('Firebase write confirmed');
+      return;
+    } else {
+      console.warn('Firebase not ready, falling back to localStorage');
+    }
+  } catch(e) {
+    console.error('lbSave Firebase error:', e);
+  }
+  try {
+    localStorage.setItem(LB_KEY, JSON.stringify(data));
+    console.log('Saved to localStorage as fallback');
+  } catch(e) {}
+}
+
+async function lbSubmitScore(username, worldScores) {
+  console.log('lbSubmitScore called for:', username);
+  const allWorlds = WORLDS.map(w => {
+    const s = worldScores[w.id];
+    return { played: !!s, correct: s ? s.correct : 0, total: s ? s.total : 0 };
+  });
+  const totalCorrect = allWorlds.reduce((sum, w) => sum + (w.played ? w.correct : 0), 0);
+  const totalPossible = allWorlds.reduce((sum, w) => sum + (w.played ? w.total : 0), 0);
+  const pct = totalPossible > 0 ? Math.round((totalCorrect / totalPossible) * 100) : 0;
+  const worldsPlayed = allWorlds.filter(w => w.played).length;
+  console.log('Score:', pct + '%', '| Worlds played:', worldsPlayed);
+
+  const lb = await lbLoad();
+  const existing = lb[username];
+  if (!existing || totalCorrect > existing.totalCorrect || (totalCorrect === existing.totalCorrect && worldsPlayed > existing.worldsPlayed)) {
+    lb[username] = { username, pct, totalCorrect, totalPossible, worldsPlayed, updated: Date.now() };
+    console.log('Saving to Firebase...');
+    await lbSave(lb, username);
+    console.log('Firebase save complete');
+  } else {
+    console.log('Score not improved, skipping save');
+  }
+}
+
+async function showLeaderboard() {
+  showScreen('leaderboardScreen');
+  document.getElementById('lbRows').innerHTML = '<div class="lb-loading">Loading scores...</div>';
+  document.getElementById('lbUpdated').textContent = '';
+
+  const lb = await lbLoad();
+  // Sort by total correct answers first, then worlds played as tiebreaker, then % as final tiebreaker
+  const rows = Object.values(lb).sort((a, b) => b.totalCorrect - a.totalCorrect || b.worldsPlayed - a.worldsPlayed || b.pct - a.pct);
+
+  const container = document.getElementById('lbRows');
+  container.innerHTML = '';
+
+  if (rows.length === 0) {
+    container.innerHTML = '<div class="lb-empty">No scores yet — be the first on the board! 🚀</div>';
+    return;
+  }
+
+  const maxPossible = WORLDS.length * 12; // 13 worlds x 12 questions = 156 total
+
+  rows.forEach((entry, i) => {
+    const rank = i + 1;
+    const isMe = state.username && entry.username === state.username;
+    let medal = '';
+    if (entry.totalCorrect >= 140) medal = '💎';
+    else if (entry.totalCorrect >= 100) medal = '🥇';
+    else if (entry.totalCorrect >= 60) medal = '🥈';
+    else medal = '🥉';
+
+    let rankDisplay = rank;
+    if (rank === 1) rankDisplay = '🥇';
+    else if (rank === 2) rankDisplay = '🥈';
+    else if (rank === 3) rankDisplay = '🥉';
+
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (isMe ? ' me' : '') + (rank <= 3 ? ` top${rank}` : '');
+    row.innerHTML = `
+      <div class="lb-rank">${rankDisplay}</div>
+      <div class="lb-name">${escHtml(entry.username)}${isMe ? ' ← you' : ''}</div>
+      <div class="lb-pct">${entry.totalCorrect} pts</div>
+      <div class="lb-worlds">${entry.worldsPlayed}/13</div>
+      <div class="lb-medal">${medal}</div>
+    `;
+    container.appendChild(row);
+  });
+
+  const newest = Math.max(...rows.map(r => r.updated || 0));
+  if (newest > 0) {
+    document.getElementById('lbUpdated').textContent = 'Last updated: ' + new Date(newest).toLocaleString();
+  }
+  document.getElementById('lbSubtitle').textContent = `${rows.length} student${rows.length !== 1 ? 's' : ''} on the board · Cold War & Civil Rights Era 1945–1975`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===========================
+// USERNAME
+// ===========================
+function showUsernameScreen() {
+  const saved = state.username;
+  const existingDiv = document.getElementById('unExisting');
+  if (saved) {
+    existingDiv.style.display = 'block';
+    document.getElementById('unExistingName').textContent = saved;
+  } else {
+    existingDiv.style.display = 'none';
+  }
+  document.getElementById('unInput').value = '';
+  showScreen('usernameScreen');
+  setTimeout(() => document.getElementById('unInput').focus(), 200);
+}
+
+function submitUsername() {
+  const val = document.getElementById('unInput').value.trim();
+  if (!val) { document.getElementById('unInput').focus(); return; }
+  state.username = val;
+  saveState();
+  document.getElementById('wsUsername').textContent = val;
+  buildWorldGrid();
+  updateGlobalProgress();
+  showScreen('worldScreen');
+}
+
+function useSavedUsername() {
+  document.getElementById('wsUsername').textContent = state.username;
+  buildWorldGrid();
+  updateGlobalProgress();
+  showScreen('worldScreen');
+}
+
+// ===========================
+// NAVIGATION
+// ===========================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function showTitle() { showScreen('titleScreen'); }
+function showWorldSelect() {
+  if (!state.username) { showUsernameScreen(); return; }
+  document.getElementById('wsUsername').textContent = state.username;
+  buildWorldGrid();
+  updateGlobalProgress();
+  showScreen('worldScreen');
+}
+function showFinalResults() {
+  buildFinalResults();
+  showScreen('finalScreen');
+  // Auto-submit score to leaderboard
+  if (state.username) {
+    lbSubmitScore(state.username, state.worldScores);
+  }
+}
+function resetAll() {
+  if (confirm('Reset all progress and start over? Your leaderboard score will be kept.')) {
+    const savedUsername = state.username;
+    state = { worldScores: {}, currentWorld: null, currentQIndex: 0, currentAnswers: [], shuffledQuestions: [], username: savedUsername };
+    saveState();
+    showTitle();
+  }
+}
+
+// ===========================
+// WORLD SELECT
+// ===========================
+function buildWorldGrid() {
+  const grid = document.getElementById('worldsGrid');
+  grid.innerHTML = '';
+  WORLDS.forEach(w => {
+    const score = state.worldScores[w.id];
+    const completed = score && score.attempts > 0;
+    const pct = completed ? Math.round((score.correct / score.total) * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'world-card' + (completed ? ' completed' : '');
+    card.style.setProperty('--card-color', w.color);
+    card.innerHTML = `
+      <div class="world-icon">${w.icon}</div>
+      <div class="world-number">World ${w.id + 1}</div>
+      <div class="world-name">${w.name}</div>
+      <div class="world-era">${w.era}</div>
+      ${completed ? `
+        <div class="world-score-bar"><div class="world-score-fill" style="width:${pct}%"></div></div>
+        <div class="world-score-label">Best: ${score.correct}/${score.total} (${pct}%)</div>
+      ` : '<div class="world-score-label">Not yet played</div>'}
+      <div class="badge-row">${(state.worldBadges && state.worldBadges[w.id]) ? `<span class="world-badge-earned" title="Boss Defeated!">🏆 ${state.worldBadges[w.id]}</span>` : `<span class="world-badge-locked" title="Defeat the boss to earn this badge">🔒</span>`}</div>
+    `;
+    card.onclick = () => startWorld(w.id);
+    grid.appendChild(card);
+  });
+}
+
+function updateGlobalProgress() {
+  const completed = Object.keys(state.worldScores).filter(k => state.worldScores[k].attempts > 0).length;
+  const pct = Math.round((completed / WORLDS.length) * 100);
+  document.getElementById('globalProgressBar').style.width = pct + '%';
+  document.getElementById('globalProgressLabel').textContent = `${completed} / ${WORLDS.length} worlds completed`;
+}
+
+// ===========================
+// QUIZ ENGINE
+// ===========================
+function startWorld(worldId) {
+  state.currentWorld = worldId;
+  state.currentQIndex = 0;
+  state.currentAnswers = [];
+
+  // Shuffle questions for variety
+  const qs = [...WORLDS[worldId].questions];
+  for (let i = qs.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [qs[i], qs[j]] = [qs[j], qs[i]];
+  }
+  state.shuffledQuestions = qs;
+
+  document.getElementById('quizWorldName').textContent = WORLDS[worldId].name;
+  buildDots();
+  initBattle(worldId);
+  renderQuestion();
+  showScreen('quizScreen');
+}
+
+function buildDots() {
+  const dots = document.getElementById('quizDots');
+  dots.innerHTML = '';
+  state.shuffledQuestions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'quiz-dot' + (i === 0 ? ' current' : '');
+    d.id = `dot-${i}`;
+    dots.appendChild(d);
+  });
+}
+
+function updateDots() {
+  state.currentAnswers.forEach((a, i) => {
+    const d = document.getElementById(`dot-${i}`);
+    if (d) {
+      d.className = 'quiz-dot ' + (a ? 'answered-correct' : 'answered-wrong');
+    }
+  });
+  const cur = document.getElementById(`dot-${state.currentQIndex}`);
+  if (cur && state.currentQIndex >= state.currentAnswers.length) {
+    cur.className = 'quiz-dot current';
+  }
+}
+
+function renderQuestion() {
+  const q = state.shuffledQuestions[state.currentQIndex];
+  const num = state.currentQIndex + 1;
+  const total = state.shuffledQuestions.length;
+
+  document.getElementById('quizQNum').textContent = `${num} / ${total}`;
+  updateDots();
+
+  const body = document.getElementById('quizBody');
+  body.innerHTML = '';
+
+  // Type badge
+  const badge = document.createElement('div');
+  const isStimulus = q.type === 'stimulus';
+  const baseType = isStimulus ? (q.answerType || 'mc') : q.type;
+  const typeMap = {
+    mc: ['mc', 'Multiple Choice'],
+    tf: ['tf', 'True / False'],
+    fb: ['fb', 'Fill in the Blank'],
+    stimulus: ['stimulus', '📜 Primary Source']
+  };
+  const [cls, label] = typeMap[isStimulus ? 'stimulus' : baseType];
+  badge.className = `q-type-badge ${cls}`;
+  badge.textContent = label;
+  body.appendChild(badge);
+
+  // Question number
+  const qnum = document.createElement('div');
+  qnum.className = 'q-number';
+  qnum.textContent = `Question ${num} of ${total}`;
+  body.appendChild(qnum);
+
+  // Stimulus block (quote or image)
+  if (isStimulus) {
+    const sBlock = document.createElement('div');
+    sBlock.className = 'stimulus-block';
+
+    if (q.stimType === 'quote') {
+      sBlock.innerHTML = `
+        <div class="stimulus-label">📜 Primary Source Document</div>
+        <div class="stimulus-quote">${q.stimulus}</div>
+        <div class="stimulus-attribution">— ${q.attribution}</div>
+      `;
+    } else if (q.stimType === 'image') {
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'stimulus-label';
+      labelDiv.textContent = '🖼️ Historical Photograph / Image';
+      const img = document.createElement('img');
+      img.className = 'stimulus-image';
+      img.alt = q.attribution || 'Historical image';
+      img.src = q.imgUrl;
+      const cap = document.createElement('div');
+      cap.className = 'stimulus-image-caption';
+      cap.textContent = q.attribution;
+      sBlock.appendChild(labelDiv);
+      sBlock.appendChild(img);
+      sBlock.appendChild(cap);
+    }
+    body.appendChild(sBlock);
+  } else if (q.context) {
+    // Legacy context field
+    const ctx = document.createElement('div');
+    ctx.className = 'q-context';
+    ctx.textContent = q.context;
+    body.appendChild(ctx);
+  }
+
+  // Question text
+  const qt = document.createElement('div');
+  qt.className = 'q-text';
+  qt.textContent = q.q;
+  body.appendChild(qt);
+
+  // Answer UI — stimulus questions use answerType to pick renderer
+  const aType = isStimulus ? (q.answerType || 'mc') : q.type;
+  if (aType === 'mc') renderMC(body, q);
+  else if (aType === 'tf') renderTF(body, q);
+  else if (aType === 'fb') renderFB(body, q);
+}
+
+function renderMC(body, q) {
+  const wrap = document.createElement('div');
+  wrap.className = 'mc-options';
+  const letters = ['A', 'B', 'C', 'D'];
+  // Shuffle options while tracking which is correct
+  const indices = q.opts.map((_, i) => i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  const correctNewPos = indices.indexOf(q.ans);
+  indices.forEach((origIdx, newPos) => {
+    const btn = document.createElement('button');
+    btn.className = 'mc-option';
+    btn.innerHTML = `<span class="mc-letter">${letters[newPos]}</span><span>${q.opts[origIdx]}</span>`;
+    btn.onclick = () => handleMCAnswer(q, origIdx, wrap, indices, correctNewPos);
+    wrap.appendChild(btn);
+  });
+  body.appendChild(wrap);
+}
+
+function handleMCAnswer(q, chosenOrigIdx, wrap, indices, correctNewPos) {
+  const btns = wrap.querySelectorAll('.mc-option');
+  btns.forEach(b => b.classList.add('locked'));
+  const correct = chosenOrigIdx === q.ans;
+  const chosenNewPos = indices ? indices.indexOf(chosenOrigIdx) : chosenOrigIdx;
+  btns[chosenNewPos].classList.add(correct ? 'selected-correct' : 'selected-wrong');
+  if (!correct) btns[correctNewPos !== undefined ? correctNewPos : q.ans].classList.add('show-correct');
+  recordAnswer(correct);
+  showFeedback(correct, q.explain, q.opts[q.ans]);
+}
+
+function renderTF(body, q) {
+  const wrap = document.createElement('div');
+  wrap.className = 'tf-options';
+
+  const trueBtn = document.createElement('button');
+  trueBtn.className = 'tf-btn true-btn';
+  trueBtn.innerHTML = '✓<br><span style="font-size:1rem;font-family:Oswald">TRUE</span>';
+  trueBtn.onclick = () => handleTFAnswer(q, true, trueBtn, falseBtn);
+  wrap.appendChild(trueBtn);
+
+  const falseBtn = document.createElement('button');
+  falseBtn.className = 'tf-btn false-btn';
+  falseBtn.innerHTML = '✗<br><span style="font-size:1rem;font-family:Oswald">FALSE</span>';
+  falseBtn.onclick = () => handleTFAnswer(q, false, trueBtn, falseBtn);
+  wrap.appendChild(falseBtn);
+
+  body.appendChild(wrap);
+}
+
+function handleTFAnswer(q, chosen, trueBtn, falseBtn) {
+  [trueBtn, falseBtn].forEach(b => b.classList.add('locked'));
+  const correct = chosen === q.ans;
+  const chosenBtn = chosen ? trueBtn : falseBtn;
+  chosenBtn.classList.add(correct ? 'selected-correct' : 'selected-wrong');
+  if (!correct) {
+    const correctBtn = q.ans ? trueBtn : falseBtn;
+    correctBtn.classList.add('show-correct');
+  }
+  recordAnswer(correct);
+  const correctLabel = q.ans ? 'TRUE' : 'FALSE';
+  showFeedback(correct, q.explain, correctLabel);
+}
+
+function renderFB(body, q) {
+  const wrap = document.createElement('div');
+  wrap.className = 'fb-wrap';
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'fb-input';
+  input.placeholder = 'Type your answer...';
+  input.autocomplete = 'off';
+  if (q.hint) {
+    const hint = document.createElement('div');
+    hint.className = 'fb-hint';
+    hint.textContent = `Hint: ${q.hint}`;
+    wrap.appendChild(input);
+    wrap.appendChild(hint);
+  } else {
+    wrap.appendChild(input);
+  }
+
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'fb-submit';
+  submitBtn.textContent = 'Submit Answer';
+  submitBtn.onclick = () => handleFBAnswer(q, input, submitBtn);
+  wrap.appendChild(submitBtn);
+
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submitBtn.click(); });
+  body.appendChild(wrap);
+  setTimeout(() => input.focus(), 100);
+}
+
+function handleFBAnswer(q, input, btn) {
+  const userAns = input.value.trim().toLowerCase();
+  if (!userAns) return;
+  input.disabled = true;
+  btn.disabled = true;
+
+  const acceptable = [q.ans.toLowerCase(), ...(q.alts || [])];
+  const correct = acceptable.some(a => userAns === a || checkFuzzy(userAns, a));
+
+  input.classList.add(correct ? 'correct' : 'wrong');
+  recordAnswer(correct);
+  showFeedback(correct, q.explain, q.ans);
+}
+
+function checkFuzzy(user, target) {
+  // Allow minor spelling differences
+  if (Math.abs(user.length - target.length) > 2) return false;
+  let diff = 0;
+  const longer = user.length > target.length ? user : target;
+  const shorter = user.length > target.length ? target : user;
+  for (let i = 0; i < longer.length; i++) {
+    if (longer[i] !== shorter[i]) diff++;
+    if (diff > 1) return false;
+  }
+  return true;
+}
+
+function showFeedback(correct, explanation, correctAns) {
+  const body = document.getElementById('quizBody');
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback-box ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = `
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <span class="feedback-icon">${correct ? '✅' : '❌'}</span>
+      <span class="feedback-title">${correct ? 'Correct!' : 'Not quite...'}</span>
+    </div>
+    ${!correct ? `<div style="font-size:0.82rem;margin:0.4rem 0;color:var(--silver)">Correct answer: <strong style="color:var(--gold)">${correctAns}</strong></div>` : ''}
+    <div class="feedback-explanation">${explanation}</div>
+  `;
+  body.appendChild(fb);
+
+  const isLast = state.currentQIndex >= state.shuffledQuestions.length - 1;
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'next-btn';
+  nextBtn.textContent = isLast ? 'See Results →' : 'Next Question →';
+  nextBtn.onclick = isLast ? finishWorld : nextQuestion;
+  body.appendChild(nextBtn);
+  nextBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function recordAnswer(correct) {
+  state.currentAnswers.push(correct);
+  updateDots();
+  if (correct) {
+    triggerHit(state.currentWorld);
+  } else {
+    triggerMiss(state.currentWorld);
+  }
+}
+
+function nextQuestion() {
+  state.currentQIndex++;
+  renderQuestion();
+  document.getElementById('quizBody').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function finishWorld() {
+  const correct = state.currentAnswers.filter(Boolean).length;
+  const total = state.shuffledQuestions.length;
+  const worldId = state.currentWorld;
+
+  // Update best score
+  const prev = state.worldScores[worldId];
+  const prevBest = prev ? prev.correct : -1;
+  state.worldScores[worldId] = {
+    correct: Math.max(correct, prevBest),
+    total,
+    attempts: (prev ? prev.attempts : 0) + 1
+  };
+  saveState();
+
+  // Submit to live leaderboard after every world completion
+  if (state.username) {
+    lbSubmitScore(state.username, state.worldScores);
+  }
+
+  showWorldResults(worldId, correct, total);
+}
+
+function showWorldResults(worldId, correct, total) {
+  const pct = Math.round((correct / total) * 100);
+  const world = WORLDS[worldId];
+
+  let icon, title;
+  if (pct >= 90) { icon = '🏆'; title = 'Outstanding!'; }
+  else if (pct >= 75) { icon = '🌟'; title = 'Great Work!'; }
+  else if (pct >= 60) { icon = '👍'; title = 'Good Effort!'; }
+  else { icon = '📚'; title = 'Keep Studying!'; }
+
+  document.getElementById('wrIcon').textContent = icon;
+  document.getElementById('wrTitle').textContent = title;
+  document.getElementById('wrWorldName').textContent = world.name;
+  document.getElementById('wrScore').textContent = `${pct}%`;
+  document.getElementById('wrCorrect').textContent = correct;
+  document.getElementById('wrWrong').textContent = total - correct;
+
+  // Show badge if boss was defeated
+  const badgeEl = document.getElementById('wrBadgeEarned');
+  const b = BATTLES[worldId];
+  if (battle.defeated && b) {
+    badgeEl.innerHTML = `<span title="Boss Defeated!" style="animation:pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275)">🏆 Boss Defeated! ${b.bossEmoji}</span>`;
+  } else if (b) {
+    badgeEl.innerHTML = `<span style="color:var(--muted);font-size:0.8rem">Boss survived — try again to earn the badge!</span>`;
+  } else {
+    badgeEl.innerHTML = '';
+  }
+
+  showScreen('worldResultScreen');
+}
+
+function retryWorld() {
+  startWorld(state.currentWorld);
+}
+
+function confirmBackToWorlds() {
+  if (state.currentAnswers.length > 0 && state.currentAnswers.length < state.shuffledQuestions.length) {
+    if (!confirm('Leave this world? Your progress in this round will be lost.')) return;
+  }
+  showWorldSelect();
+}
+
+// ===========================
+// FINAL RESULTS
+// ===========================
+function buildFinalResults() {
+  const allWorlds = WORLDS.map(w => {
+    const s = state.worldScores[w.id];
+    return { ...w, played: !!s, correct: s ? s.correct : 0, total: s ? s.total : 10 };
+  });
+
+  const totalCorrect = allWorlds.reduce((sum, w) => sum + (w.played ? w.correct : 0), 0);
+  const totalPossible = allWorlds.reduce((sum, w) => sum + (w.played ? w.total : 0), 0);
+  const pct = totalPossible > 0 ? Math.round((totalCorrect / totalPossible) * 100) : 0;
+  const worldsPlayed = allWorlds.filter(w => w.played).length;
+
+  // Medal
+  let medal, medalClass, medalMsg, grade, gradeClass;
+  if (pct >= 95 && worldsPlayed === 13) { medal = '💎'; medalClass = 'platinum'; medalMsg = 'PLATINUM'; }
+  else if (pct >= 85) { medal = '🥇'; medalClass = 'gold'; medalMsg = 'GOLD'; }
+  else if (pct >= 70) { medal = '🥈'; medalClass = 'silver'; medalMsg = 'SILVER'; }
+  else { medal = '🥉'; medalClass = 'bronze'; medalMsg = 'BRONZE'; }
+
+  // Grade
+  if (pct >= 90) { grade = 'A'; gradeClass = 'A'; }
+  else if (pct >= 80) { grade = 'B'; gradeClass = 'B'; }
+  else if (pct >= 70) { grade = 'C'; gradeClass = 'C'; }
+  else if (pct >= 60) { grade = 'D'; gradeClass = 'D'; }
+  else { grade = 'F'; gradeClass = 'F'; }
+
+  const gradeMessages = {
+    A: "Exceptional mastery of American history from the Spanish-American War through WWII. You clearly understand not just the facts but the connections between events. History teacher approved! 🎓",
+    B: "Solid understanding of America's rise to global power. You know your Zimmermann Telegrams from your Zimmermann Telegraphs. A little more review and you'll ace that exam!",
+    C: "You've got the broad strokes down. Revisit the worlds where you struggled — especially the cause-and-effect connections between events. You can do this!",
+    D: "The material hasn't fully clicked yet, but that's okay — that's why we study! Go back through the tougher worlds and try again. Focus on the big 'why' questions.",
+    F: "Everyone starts somewhere! The good news: you now know exactly what to focus on. Go back world by world and build your knowledge. History rewards those who revisit it."
+  };
+
+  document.getElementById('medalIcon').textContent = medal;
+  document.getElementById('medalName').textContent = medalMsg;
+  document.getElementById('medalName').className = `medal-name ${medalClass}`;
+  document.getElementById('finalPct').textContent = `${pct}%`;
+  document.getElementById('finalFraction').textContent = totalPossible > 0 ? `${totalCorrect} / ${totalPossible} questions correct across ${worldsPlayed} world${worldsPlayed !== 1 ? 's' : ''}` : 'Play some worlds to see your score!';
+  document.getElementById('gradeBadge').textContent = grade;
+  document.getElementById('gradeBadge').className = `grade-badge ${gradeClass}`;
+  document.getElementById('gradeMsg').textContent = gradeMessages[grade];
+
+  // Trophies
+  const trophies = [
+    { icon: '⚓', label: 'First World', earned: worldsPlayed >= 1 },
+    { icon: '📚', label: 'Half Complete', earned: worldsPlayed >= 7 },
+    { icon: '🌍', label: 'All Worlds', earned: worldsPlayed === 13 },
+    { icon: '⭐', label: 'Any 80%+ World', earned: allWorlds.some(w => w.played && w.correct / w.total >= 0.8) },
+    { icon: '🔥', label: 'Any Perfect World', earned: allWorlds.some(w => w.played && w.correct === w.total) },
+    { icon: '🏆', label: 'Overall 85%+', earned: pct >= 85 },
+  ];
+  const tc = document.getElementById('trophyCase');
+  tc.innerHTML = '';
+  trophies.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'trophy-item' + (t.earned ? ' earned' : '');
+    el.title = t.label;
+    el.textContent = t.icon;
+    if (t.earned) el.style.animationDelay = `${i * 0.15}s`;
+    tc.appendChild(el);
+  });
+
+  // Per-world breakdown
+  const grid = document.getElementById('worldBreakdownGrid');
+  grid.innerHTML = '';
+  allWorlds.forEach(w => {
+    const pctW = w.played ? Math.round((w.correct / w.total) * 100) : 0;
+    const card = document.createElement('div');
+    card.className = 'wb-card';
+    card.innerHTML = `
+      <div class="wb-world-name">${w.icon} ${w.name}</div>
+      <div class="wb-score-bar"><div class="wb-score-fill" style="width:${pctW}%;background:${w.color}"></div></div>
+      <div class="wb-score-text">${w.played ? `${w.correct}/${w.total} (${pctW}%)` : 'Not yet played'}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Confetti for high scores
+  if (pct >= 80 && worldsPlayed >= 5) launchConfetti();
+}
+
+function launchConfetti() {
+  const colors = ['#f0b429', '#e8930a', '#c0392b', '#3498db', '#27ae60', '#9b59b6'];
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = (2 + Math.random() * 3) + 's';
+      piece.style.animationDelay = Math.random() * 0.5 + 's';
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 6000);
+    }, i * 30);
+  }
+}
+
+
+// ===========================
+// BATTLE SYSTEM
+// ===========================
+// ===========================
+// PIXEL ART — COLD WAR & CIVIL RIGHTS
+// ===========================
+
+// WORLD 0: Cold War in Europe
+// Hero: American Diplomat (suit, briefcase)
+function drawAmericanDiplomat(ctx) {
+  const P = { N:'#f5c5a0',H:'#2c1a0e',S:'#1a2a4a',T:'#c8d8f0',R:'#c0392b',W:'#fff',K:'#111',B:'#0a1628',G:'#888',Y:'#f0b429',A:'#3a5a8a' };
+  px(ctx, [
+    '    HHHH    ',
+    '   HNNNNH   ',
+    '   NNNNNNN  ',
+    '   NKNKNNN  ',
+    '   NNNNNNN  ',
+    '    WWWWW   ',
+    '  SSSWWSSS  ',
+    '  SSSSSSSS  ',
+    '  SRSSSSRS  ',
+    '  SSSSSSSS  ',
+    '   SSSSSS   ',
+    '   BBBBBBB  ',
+    '  BBBBBBB   ',
+    '  BB   BBB  ',
+    '  AA   KKK  ',
+    ' AAAA KKKK  ',
+  ], P);
+}
+
+// Boss: Soviet Commissar (red star, gray coat)
+function drawSovietCommisar(ctx) {
+  const P = { N:'#d4a090',H:'#1a1a1a',S:'#555',T:'#c8c8c8',R:'#cc0000',W:'#fff',K:'#111',B:'#333',G:'#777',Y:'#f0b429',D:'#888' };
+  px(ctx, [
+    '    HHHH    ',
+    '   HYYYYH   ',
+    '   RRRRRRR  ',
+    '   RNRNRNN  ',
+    '   RNNNRN T ',
+    '    TTTTT   ',
+    '   DDDDDDD  ',
+    '  DDDDDDDDD ',
+    '  DDRDDRDDD ',
+    '  DDDDDDDDD ',
+    '   DDDDDDD  ',
+    '  DDDDDDDDD ',
+    '  DDDDDDDDD ',
+    '   DD   DD  ',
+    '  BBBB BBBB ',
+    ' BBBBB BBBB ',
+  ], P);
+}
+
+// WORLD 1: Cold War in the Americas
+// Hero: CIA Agent (dark suit, fedora)
+function drawCIAAgent(ctx) {
+  const P = { N:'#e8c49a',H:'#1a1a1a',S:'#2a2a2a',T:'#e0e0e0',R:'#8a0000',W:'#fff',K:'#000',B:'#111',G:'#555',Y:'#c8a832',A:'#444' };
+  px(ctx, [
+    '   HHHHHH   ',
+    '  HHHHHHHH  ',
+    '  HNNNNNNH  ',
+    '  HNKNKNNH  ',
+    '  HNNNNNNH  ',
+    '   TTTTTT   ',
+    '  AAAWAAAA  ',
+    '  AAAAAAAA  ',
+    '  AARAAARAA ',
+    '  AAAAAAAA  ',
+    '   AAAAAA   ',
+    '  BBBBBBB   ',
+    '  BBBBBBB   ',
+    '  BB   BB   ',
+    '  KK   KK   ',
+    ' KKKK KKKK  ',
+  ], P);
+}
+
+// Boss: Fidel Castro (olive uniform, beard)
+function drawFidelCastro(ctx) {
+  const P = { N:'#c8a070',H:'#1a1a0a',S:'#3a5a2a',T:'#5a8a3a',R:'#c0392b',W:'#fff',K:'#111',B:'#2a3a1a',G:'#8a6a30',Y:'#d4a030',D:'#4a6a3a',M:'#556B2F' };
+  px(ctx, [
+    '   HHHHHH   ',
+    '  MYYYYYYM  ',
+    '  MYYYYYYY  ',
+    '  YNNNNNNY  ',
+    '  YNKNKNNY  ',
+    '  YNNNNNNY  ',
+    '  YHHHHHHY  ',
+    '   DDDDDDD  ',
+    '  DDDDDDDDD ',
+    '  DDRDDRDDD ',
+    '  DDDDDDDDD ',
+    '  DDDDDDDDD ',
+    '  DDDDDDDDD ',
+    '   DD   DD  ',
+    '  BBBB BBBB ',
+    ' BBBBB BBBBB',
+  ], P);
+}
+
+// WORLD 2: Cold War in Asia
+// Hero: US GI (helmet, combat gear, green)
+function drawUSGI(ctx) {
+  const P = { N:'#e8c49a',H:'#3a4a2a',S:'#4a6a3a',T:'#c8d8a0',R:'#c0392b',W:'#fff',K:'#222',B:'#2a3a2a',G:'#8a8a5a',Y:'#d4a030',A:'#5a7a4a',D:'#6a8a5a' };
+  px(ctx, [
+    '   HHHHHH   ',
+    '  HHHHHHHH  ',
+    '  DNNNNNND  ',
+    '  DNKNKNND  ',
+    '  DNNNNNND  ',
+    '   TTTTTT   ',
+    '  AAAAAAAAА ',
+    '  AAAAAAAA  ',
+    '  AAGAAAGAA ',
+    '  AAAAAAAA  ',
+    '   AAAAAA   ',
+    '  SSSSSSS   ',
+    '  SSSSSSS   ',
+    '  SS   SS   ',
+    '  BB   BB   ',
+    ' BBBB BBBB  ',
+  ], P);
+}
+
+// Boss: Viet Cong Fighter (black pajamas, conical hat)
+function drawVietCong(ctx) {
+  const P = { N:'#c8a070',H:'#8B6914',S:'#1a1a1a',T:'#2a2a2a',R:'#8a0000',W:'#d4c0a0',K:'#111',B:'#222',G:'#5a5a3a',Y:'#c8a030',A:'#333',D:'#444' };
+  px(ctx, [
+    '  WWWWWWWW  ',
+    ' WWWWWWWWWW ',
+    '   HHNNNHH  ',
+    '   HNKNKNH  ',
+    '   HNNNNN H ',
+    '    TTTTT   ',
+    '   SSSSSSS  ',
+    '  SSSSSSSSS ',
+    '  SSASSASSS ',
+    '  SSSSSSSSS ',
+    '   SSSSSSS  ',
+    '  BBBBBBBBB ',
+    '  BBBBBBBBB ',
+    '  BB     BB ',
+    '  AA     AA ',
+    ' AAAA   AAAA',
+  ], P);
+}
+
+// WORLD 3: Space Race
+// Hero: NASA Astronaut (white suit, visor)
+function drawNASAAstronaut(ctx) {
+  const P = { N:'#e8e8e8',H:'#d0d0d0',S:'#ffffff',T:'#c0d8f0',R:'#c0392b',W:'#fff',K:'#1a3a6a',B:'#d8d8d8',G:'#888',Y:'#f0c030',A:'#b0b0b0',D:'#4a6a9a',V:'#a0c0e0' };
+  px(ctx, [
+    '   HHHHHH   ',
+    '  HVVVVVVH  ',
+    '  HVKKKKVH  ',
+    '  HVVVVVVH  ',
+    '  HSSSSSH   ',
+    '  SSSSSSSS  ',
+    '  SSSSSSSS  ',
+    ' ASSSRSSSAS ',
+    '  SSSSSSSS  ',
+    '  SSSSSSSS  ',
+    '  SSSSSSSS  ',
+    ' BBBBBBBBB  ',
+    ' BBBBBBBBB  ',
+    '  BB   BB   ',
+    '  DD   DD   ',
+    ' DDDD DDDD  ',
+  ], P);
+}
+
+// Boss: Soviet Sputnik/Rocket (missile shape with red star)
+function drawSovietRocket(ctx) {
+  const P = { N:'#c8c8c8',H:'#888',S:'#c0392b',T:'#888888',R:'#ff0000',W:'#fff',K:'#111',B:'#666',G:'#aaa',Y:'#f0c030',A:'#999',D:'#777',V:'#444' };
+  px(ctx, [
+    '    SSSS    ',
+    '   SSSSSS   ',
+    '  TTTTTTTT  ',
+    '  TTTTTTTT  ',
+    '  TTWWSWWTT ',
+    '  TTSSSSSTT ',
+    '  TTWWSWWTT ',
+    '  TTTTTTTT  ',
+    '  TTTTTTTT  ',
+    '  TTTTTTTT  ',
+    '  TTTTTTTT  ',
+    ' VTTTTTTTTV ',
+    ' VTTTTTTTTV ',
+    'VVTTTTTTTVVV',
+    'VVVV    VVVV',
+    'VVV      VVV',
+  ], P);
+}
+
+// WORLD 4: Civil Rights Era
+// Hero: Civil Rights Marcher (suit, protest sign)
+function drawCivilRightsMarcher(ctx) {
+  const P = { N:'#8a5a30',H:'#2a1a0a',S:'#1a1a6a',T:'#ffffff',R:'#c0392b',W:'#fff',K:'#111',B:'#0a0a4a',G:'#888',Y:'#f0b429',A:'#2a2a8a',D:'#aaaaff' };
+  px(ctx, [
+    '    HHHH    ',
+    '   HNNNNH   ',
+    '   NNNNNNN  ',
+    '   NKNNNNN  ',
+    '   NNNNNN T ',
+    '    TTTTT   ',
+    '  AAAWAAAA  ',
+    '  AAAAAAAA  ',
+    '  AARAAARAA ',
+    '  AAAAAAAA  ',
+    '   AAAAAA T ',
+    '   BBBBB TT ',
+    '   BBBBB TW ',
+    '  BBB  T TW ',
+    '  BB   T T  ',
+    ' BBBBB TTT  ',
+  ], P);
+}
+
+// Boss: Segregation Sheriff (badge, club, hat)
+function drawSegregationSheriff(ctx) {
+  const P = { N:'#e8c49a',H:'#4a3010',S:'#4a5a6a',T:'#8a9aaa',R:'#c0392b',W:'#fff',K:'#222',B:'#3a4a5a',G:'#888',Y:'#d4a030',A:'#5a6a7a',D:'#2a3a4a' };
+  px(ctx, [
+    '  HHHHHHHH  ',
+    ' HHHHHHHHHH ',
+    '   HNNNNH   ',
+    '   NKNKNN   ',
+    '   NNNNN T  ',
+    '    TTTT    ',
+    '  AAAYAAAA  ',
+    '  AAAAAAAA  ',
+    '  AAAAAAAAK ',
+    '  AAAAAAAKK ',
+    '   AAAAAKK  ',
+    '  DDDDDDD   ',
+    '  DDDDDDD   ',
+    '  DD   DD   ',
+    '  BB   BB   ',
+    ' BBBB BBBB  ',
+  ], P);
+}
+
+// ===========================
+// BATTLE CONFIG — COLD WAR & CIVIL RIGHTS
+// ===========================
+const BATTLES = [
+  { // 0 - Cold War in Europe
+    heroPx: drawAmericanDiplomat, heroName: "US Diplomat", heroEmoji: "🤝",
+    bossPx: drawSovietCommisar, bossName: "Soviet Commissar", bossEmoji: "☭",
+    projectile: "📜", bg: "🗺️", defeatMsg: "Iron Curtain Cracked!"
+  },
+  { // 1 - Cold War in the Americas
+    heroPx: drawCIAAgent, heroName: "CIA Agent", heroEmoji: "🕵️",
+    bossPx: drawFidelCastro, bossName: "Fidel Castro", bossEmoji: "🎖️",
+    projectile: "💵", bg: "🌎", defeatMsg: "Cuba Contained!"
+  },
+  { // 2 - Cold War in Asia
+    heroPx: drawUSGI, heroName: "US GI", heroEmoji: "🪖",
+    bossPx: drawVietCong, bossName: "Viet Cong", bossEmoji: "🌿",
+    projectile: "💣", bg: "🌴", defeatMsg: "Containment Holds!"
+  },
+  { // 3 - The Space Race
+    heroPx: drawNASAAstronaut, heroName: "NASA Astronaut", heroEmoji: "👨‍🚀",
+    bossPx: drawSovietRocket, bossName: "Soviet Rocket", bossEmoji: "🚀",
+    projectile: "⭐", bg: "🌌", defeatMsg: "One Giant Leap!"
+  },
+  { // 4 - Civil Rights Era
+    heroPx: drawCivilRightsMarcher, heroName: "Rights Marcher", heroEmoji: "✊",
+    bossPx: drawSegregationSheriff, bossName: "Jim Crow Sheriff", bossEmoji: "🚫",
+    projectile: "📢", bg: "🏛️", defeatMsg: "We Shall Overcome!"
+  }
+];
+
+
+
+// ── Battle state ──────────────────────────────────────────────────────────
+let battle = {
+  bossHp: 100,
+  bossMaxHp: 100,
+  heroHp: 100,
+  streak: 0,
+  defeated: false
+};
+
+function initBattle(worldId) {
+  const total = WORLDS[worldId] ? WORLDS[worldId].questions.length : 10;
+  battle.bossMaxHp = total;
+  battle.bossHp = total;
+  battle.heroHp = 100;
+  battle.streak = 0;
+  battle.defeated = false;
+
+  const b = BATTLES[worldId] || BATTLES[0];
+  document.getElementById('battleBg').textContent = b.bg;
+  document.getElementById('heroName').textContent = b.heroName;
+  document.getElementById('bossName').textContent = b.bossName;
+  document.getElementById('battleStreak').textContent = '';
+
+  // Draw pixel art
+  const hCtx = document.getElementById('heroCanvas').getContext('2d');
+  hCtx.clearRect(0, 0, 64, 64);
+  b.heroPx(hCtx);
+
+  const bCtx = document.getElementById('bossCanvas').getContext('2d');
+  bCtx.clearRect(0, 0, 64, 64);
+  b.bossPx(bCtx);
+
+  updateBattleUI(worldId);
+}
+
+function updateBattleUI(worldId) {
+  const bossPct = Math.max(0, (battle.bossHp / battle.bossMaxHp) * 100);
+  document.getElementById('bossHpBar').style.width = bossPct + '%';
+  document.getElementById('bossHpLabel').textContent = `HP: ${Math.max(0,battle.bossHp)}/${battle.bossMaxHp}`;
+  document.getElementById('heroHpBar').style.width = battle.heroHp + '%';
+  document.getElementById('heroHpLabel').textContent = `HP: ${battle.heroHp}/100`;
+  if (battle.streak > 1) {
+    document.getElementById('battleStreak').textContent = `🔥 ${battle.streak}x Combo!`;
+  } else {
+    document.getElementById('battleStreak').textContent = '';
+  }
+}
+
+function triggerHit(worldId) {
+  const b = BATTLES[worldId] || BATTLES[0];
+  // Animate boss
+  const bossCanvas = document.getElementById('bossCanvas');
+  bossCanvas.classList.remove('boss-hit-anim');
+  void bossCanvas.offsetWidth;
+  bossCanvas.classList.add('boss-hit-anim');
+  bossCanvas.addEventListener('animationend', () => bossCanvas.classList.remove('boss-hit-anim'), { once: true });
+
+  // Launch projectile
+  const arena = document.getElementById('battleArena');
+  const proj = document.createElement('div');
+  proj.className = 'projectile';
+  proj.textContent = b.projectile;
+  proj.style.left = '80px';
+  proj.style.top = '20px';
+  proj.style.setProperty('--fly-x', '160px');
+  proj.style.setProperty('--fly-y', '0px');
+  arena.appendChild(proj);
+  proj.addEventListener('animationend', () => proj.remove(), { once: true });
+
+  // Damage boss
+  battle.bossHp--;
+  battle.streak++;
+  updateBattleUI(worldId);
+
+  // Check defeat
+  if (battle.bossHp <= 0 && !battle.defeated) {
+    battle.defeated = true;
+    setTimeout(() => triggerBossDefeat(worldId), 300);
+  }
+}
+
+function triggerMiss(worldId) {
+  battle.streak = 0;
+  // Hero just shrugs - no damage taken
+  const heroCanvas = document.getElementById('heroCanvas');
+  heroCanvas.classList.remove('hero-block-anim');
+  void heroCanvas.offsetWidth;
+  heroCanvas.classList.add('hero-block-anim');
+  heroCanvas.addEventListener('animationend', () => heroCanvas.classList.remove('hero-block-anim'), { once: true });
+  updateBattleUI(worldId);
+}
+
+function triggerBossDefeat(worldId) {
+  const b = BATTLES[worldId] || BATTLES[0];
+  const bossCanvas = document.getElementById('bossCanvas');
+  bossCanvas.classList.add('boss-defeat-anim');
+
+  // Hero victory
+  const heroCanvas = document.getElementById('heroCanvas');
+  heroCanvas.classList.add('hero-victory-anim');
+
+  // Defeat badge
+  const arena = document.getElementById('battleArena');
+  const badge = document.createElement('div');
+  badge.className = 'boss-defeated-badge';
+  badge.textContent = '🏆 ' + b.defeatMsg;
+  arena.appendChild(badge);
+
+  // Earn world badge
+  if (!state.worldBadges) state.worldBadges = {};
+  state.worldBadges[worldId] = b.bossEmoji;
+  saveState();
+}
+
+// ===========================
+// INIT
+// ===========================
+loadState();
+// Show username display if already saved
+if (state.username) document.getElementById('wsUsername').textContent = state.username;
+// Enter key on username screen (must run after DOM exists)
+const unInputEl = document.getElementById('unInput');
+if (unInputEl) unInputEl.addEventListener('keydown', e => { if (e.key === 'Enter') submitUsername(); });
+
+</script>
+
+
+<!-- ===== USERNAME ENTRY ===== -->
+<div id="usernameScreen" class="screen">
+  <div class="title-eagle">🪖</div>
+  <div class="un-title">Enter Your Name</div>
+  <div class="un-sub">Your scores will appear on the class leaderboard</div>
+  <input class="un-input" id="unInput" type="text" maxlength="20" placeholder="First name or nickname..." autocomplete="off" />
+  <div class="un-note">Keep it school-appropriate — your teacher can see this! Max 20 characters.</div>
+  <button class="btn-primary" onclick="submitUsername()">Enter the Arena →</button>
+  <div class="un-existing" id="unExisting" style="display:none">
+    Returning as <span id="unExistingName"></span>? <span onclick="useSavedUsername()">Use this name</span> or type a new one above.
+  </div>
+</div>
+
+<!-- ===== LEADERBOARD ===== -->
+<div id="leaderboardScreen" class="screen">
+  <div class="lb-header">
+    <div class="lb-title">🏆 Class Leaderboard</div>
+    <div class="lb-subtitle" id="lbSubtitle">Cold War & Civil Rights Era · 1945–1975</div>
+  </div>
+  <div class="lb-table">
+    <div class="lb-row header">
+      <div class="lb-rank">Rank</div>
+      <div class="lb-name">Name</div>
+      <div class="lb-pct">Score</div>
+      <div class="lb-worlds">Worlds</div>
+      <div class="lb-medal">Medal</div>
+    </div>
+    <div id="lbRows"><div class="lb-loading">Loading scores...</div></div>
+  </div>
+  <div class="lb-updated" id="lbUpdated"></div>
+  <div class="lb-footer">
+    <button class="btn-secondary" onclick="showTitle()">← Back to Title</button>
+    <button class="btn-primary" onclick="showWorldSelect()">Play Now 🎮</button>
+  </div>
+</div>
+
+</body>
+</html>
