@@ -2012,7 +2012,7 @@ function handleMCAnswer(q, chosenOrigIdx, wrap, indices, correctNewPos) {
   btns[chosenNewPos].classList.add(correct ? 'selected-correct' : 'selected-wrong');
   if (!correct) btns[correctNewPos !== undefined ? correctNewPos : q.ans].classList.add('show-correct');
   recordAnswer(correct);
-  showFeedback(correct, q.explain, q.opts[q.ans]);
+  showFeedback(correct, q.explain, q.opts[q.ans], q.video);
 }
 
 function renderTF(body, q) {
@@ -2045,7 +2045,7 @@ function handleTFAnswer(q, chosen, trueBtn, falseBtn) {
   }
   recordAnswer(correct);
   const correctLabel = q.ans ? 'TRUE' : 'FALSE';
-  showFeedback(correct, q.explain, correctLabel);
+  showFeedback(correct, q.explain, correctLabel, q.video);
 }
 
 function renderFB(body, q) {
@@ -2089,7 +2089,7 @@ function handleFBAnswer(q, input, btn) {
 
   input.classList.add(correct ? 'correct' : 'wrong');
   recordAnswer(correct);
-  showFeedback(correct, q.explain, q.ans);
+  showFeedback(correct, q.explain, q.ans, q.video);
 }
 
 function checkFuzzy(user, target) {
@@ -2105,7 +2105,7 @@ function checkFuzzy(user, target) {
   return true;
 }
 
-function showFeedback(correct, explanation, correctAns) {
+function showFeedback(correct, explanation, correctAns, video) {
   const body = document.getElementById('quizBody');
 
   const fb = document.createElement('div');
@@ -2117,6 +2117,9 @@ function showFeedback(correct, explanation, correctAns) {
     </div>
     ${!correct ? `<div style="font-size:0.82rem;margin:0.4rem 0;color:var(--silver)">Correct answer: <strong style="color:var(--gold)">${correctAns}</strong></div>` : ''}
     <div class="feedback-explanation">${explanation}</div>
+    ${!correct && video ? `<a class="video-link" href="${video.url}" target="_blank" rel="noopener">
+      <span class="yt-icon">▶</span> Watch: ${video.title}
+    </a>` : ''}
   `;
   body.appendChild(fb);
 
