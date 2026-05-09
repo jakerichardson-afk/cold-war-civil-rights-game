@@ -2106,6 +2106,7 @@ function checkFuzzy(user, target) {
 }
 
 function showFeedback(correct, explanation, correctAns, video) {
+  const worldArticles = (!correct && WORLD_ARTICLES[state.currentWorld]) ? WORLD_ARTICLES[state.currentWorld] : [];
   const body = document.getElementById('quizBody');
 
   const fb = document.createElement('div');
@@ -2120,6 +2121,10 @@ function showFeedback(correct, explanation, correctAns, video) {
     ${!correct && video ? `<a class="video-link" href="${video.url}" target="_blank" rel="noopener">
       <span class="yt-icon">▶</span> Watch: ${video.title}
     </a>` : ''}
+    ${!correct && worldArticles.length ? `<div style="margin-top:0.6rem;font-size:0.78rem;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;font-weight:600;">📖 Read more on USHistory.org</div>
+    <div style="display:flex;flex-direction:column;gap:0.3rem;margin-top:0.3rem;">
+      ${worldArticles.map(a => `<a href="${a.url}" target="_blank" rel="noopener" style="color:var(--gold);font-size:0.82rem;text-decoration:none;display:flex;align-items:center;gap:0.3rem;"><span style="opacity:0.7">→</span>${a.title}</a>`).join('')}
+    </div>` : ''}
   `;
   body.appendChild(fb);
 
@@ -2589,6 +2594,38 @@ const BATTLES = [
 ];
 
 
+
+
+// ── USHistory.org article links by world ──────────────────────────────────
+const WORLD_ARTICLES = [
+  [ // 0 - Cold War in Europe
+    {title: "The Cold War Erupts", url: "https://www.ushistory.org/us/52a.asp"},
+    {title: "Containment and the Marshall Plan", url: "https://www.ushistory.org/us/52c.asp"},
+    {title: "The Berlin Airlift and NATO", url: "https://www.ushistory.org/us/52d.asp"}
+  ],
+  [ // 1 - Cold War in the Americas
+    {title: "The Cold War Erupts", url: "https://www.ushistory.org/us/52a.asp"},
+    {title: "Triangular Diplomacy: U.S., USSR, and China", url: "https://www.ushistory.org/us/56g.asp"},
+    {title: "The End of the Cold War", url: "https://www.ushistory.org/us/59e.asp"}
+  ],
+  [ // 2 - Cold War in Asia
+    {title: "The Korean War", url: "https://www.ushistory.org/us/52e.asp"},
+    {title: "Vietnam: Early Involvement", url: "https://www.ushistory.org/us/55a.asp"},
+    {title: "Years of Escalation: 1965–68", url: "https://www.ushistory.org/us/55b.asp"},
+    {title: "The Antiwar Movement", url: "https://www.ushistory.org/us/55d.asp"}
+  ],
+  [ // 3 - The Space Race
+    {title: "The Cold War Continues (1950s)", url: "https://www.ushistory.org/us/53e.asp"},
+    {title: "The Cold War Erupts", url: "https://www.ushistory.org/us/52a.asp"}
+  ],
+  [ // 4 - Civil Rights Era
+    {title: "Separate No Longer?", url: "https://www.ushistory.org/us/54a.asp"},
+    {title: "Rosa Parks and the Montgomery Bus Boycott", url: "https://www.ushistory.org/us/54b.asp"},
+    {title: "Martin Luther King Jr.", url: "https://www.ushistory.org/us/54f.asp"},
+    {title: "Malcolm X and the Nation of Islam", url: "https://www.ushistory.org/us/54h.asp"},
+    {title: "Black Power", url: "https://www.ushistory.org/us/54i.asp"}
+  ]
+];
 
 // ── Battle state ──────────────────────────────────────────────────────────
 let battle = {
