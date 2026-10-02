@@ -915,6 +915,18 @@
     animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 20;
   }
+  /* Android joke overlay */
+  .android-badge {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0.25rem; padding: 0.5rem 1rem; text-align: center;
+    background: rgba(10,10,15,0.92); border: 2px solid var(--green);
+    z-index: 30; cursor: pointer;
+    animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .android-badge-title { font-family: 'Bebas Neue'; font-size: 1.6rem; letter-spacing: 0.15em; color: var(--green); line-height: 1; }
+  .android-badge-sub { font-size: 0.8rem; color: var(--text); max-width: 34rem; }
+  .android-badge-sub b { color: var(--gold); }
   /* World badge display */
   .world-badge-earned {
     display: inline-block;
@@ -2627,6 +2639,26 @@ const WORLD_ARTICLES = [
   ]
 ];
 
+// Just for fun: Android players start in the hole. (?android forces it for testing.)
+function isAndroid() {
+  return /android/i.test(navigator.userAgent) || navigator.userAgentData?.platform === 'Android' || /[?&]android\b/.test(location.search);
+}
+
+function androidTax() {
+  battle.heroHp = -100;
+  const arena = document.getElementById('battleArena');
+  arena.querySelectorAll('.android-badge').forEach(el => el.remove());
+  const badge = document.createElement('div');
+  badge.className = 'android-badge';
+  badge.innerHTML = `<div class="android-badge-title">📱 ANDROID DETECTED</div>
+    <div class="android-badge-sub">Intelligence reports your phone is stuck behind the <b>Green Bubble Curtain</b>. You start with <b>-100 HP</b>.</div>
+    <div class="android-badge-sub">Good news: you can still win this Cold War. Bad news: the iPhone kids already won the Space Race.</div>`;
+  const close = () => badge.remove();
+  badge.addEventListener('click', close);
+  setTimeout(close, 5500);
+  arena.appendChild(badge);
+}
+
 // ── Battle state ──────────────────────────────────────────────────────────
 let battle = {
   bossHp: 100,
@@ -2659,6 +2691,7 @@ function initBattle(worldId) {
   bCtx.clearRect(0, 0, 64, 64);
   b.bossPx(bCtx);
 
+  if (isAndroid()) androidTax();
   updateBattleUI(worldId);
 }
 
@@ -2666,7 +2699,7 @@ function updateBattleUI(worldId) {
   const bossPct = Math.max(0, (battle.bossHp / battle.bossMaxHp) * 100);
   document.getElementById('bossHpBar').style.width = bossPct + '%';
   document.getElementById('bossHpLabel').textContent = `HP: ${Math.max(0,battle.bossHp)}/${battle.bossMaxHp}`;
-  document.getElementById('heroHpBar').style.width = battle.heroHp + '%';
+  document.getElementById('heroHpBar').style.width = Math.max(0, battle.heroHp) + '%';
   document.getElementById('heroHpLabel').textContent = `HP: ${battle.heroHp}/100`;
   if (battle.streak > 1) {
     document.getElementById('battleStreak').textContent = `🔥 ${battle.streak}x Combo!`;
